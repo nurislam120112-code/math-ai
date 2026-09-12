@@ -211,7 +211,6 @@ button:disabled{
 </header>
 
 <section class="hero">
-
   <h1>
     Математика сабагына
     <span>AI презентация</span>
@@ -221,7 +220,6 @@ button:disabled{
     Теманы жана классты тандаңыз.
     AI сабактын текстин жана сүрөттөрүн автоматтык даярдайт.
   </p>
-
 </section>
 
 <div class="card">
@@ -316,7 +314,6 @@ placeholder="Мисалы: мисалдар жана формулалар кош
 </div>
 </div>
 
-
 <script>
 
 const form =
@@ -334,7 +331,6 @@ document.getElementById("progressWrap");
 const progress =
 document.getElementById("progress");
 
-
 function updateStatus(text,percent){
 
   statusBox.style.display="block";
@@ -344,6 +340,9 @@ function updateStatus(text,percent){
   progress.style.width=percent+"%";
 }
 
+function sleep(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
 
 async function createImage(prompt){
 
@@ -361,99 +360,110 @@ async function createImage(prompt){
       body:JSON.stringify({
         prompt:prompt
       })
-
     });
 
     const data =
     await response.json();
+
+    if(response.status===429){
+
+      console.warn("429 limit");
+
+      return {
+        success:false,
+        retry:true
+      };
+    }
 
     if(
       response.ok &&
       data.success &&
       data.image
     ){
-      return data.image;
+
+      return {
+        success:true,
+        image:data.image
+      };
     }
 
     console.error(data);
-    return null;
+
+    return {
+      success:false,
+      retry:false
+    };
 
   }catch(error){
 
     console.error(error);
-    return null;
+
+    return {
+      success:false,
+      retry:false
+    };
   }
 }
 
+async function generateOneImage(slide,index,total){
 
-/* 3 СҮРӨТТҮ БИР УЧУРДА ДАЯРДАЙТ */
+  if(!slide.imagePrompt){
+    return null;
+  }
+
+  let tries=0;
+
+  while(tries<3){
+
+    tries++;
+
+    updateStatus(
+      `AI сүрөт даярдап жатат: ${index+1} / ${total}`,
+      20+Math.round(((index+1)/total)*75)
+    );
+
+    const result =
+    await createImage(slide.imagePrompt);
+
+    if(result.success){
+      return result.image;
+    }
+
+    if(result.retry){
+
+      updateStatus(
+        `Лимит чыкты. ${index+1}-сүрөт кайра аракет кылууда...`,
+        20+Math.round(((index+1)/total)*75)
+      );
+
+      await sleep(8000);
+      continue;
+    }
+
+    return null;
+  }
+
+  return null;
+}
 
 async function generateImages(slides){
 
-  const batchSize=3;
+  for(let i=0;i<slides.length;i++){
 
-  for(
-    let start=0;
-    start<slides.length;
-    start+=batchSize
-  ){
-
-    const batch =
-    slides.slice(
-      start,
-      start+batchSize
+    const image =
+    await generateOneImage(
+      slides[i],
+      i,
+      slides.length
     );
 
-    updateStatus(
-      `AI сүрөттөрдү даярдап жатат: ${start+1}-${Math.min(start+batch.length,slides.length)} / ${slides.length}`,
-      20+Math.round(
-        (start/slides.length)*70
-      )
-    );
-
-
-    const results =
-    await Promise.all(
-
-      batch.map(
-        async(slide,batchIndex)=>{
-
-          const index =
-          start+batchIndex;
-
-          if(!slide.imagePrompt){
-
-            return{
-              index:index,
-              image:null
-            };
-          }
-
-          const image =
-          await createImage(
-            slide.imagePrompt
-          );
-
-          return{
-            index:index,
-            image:image
-          };
-
-        }
-      )
-
-    );
-
-
-    for(const item of results){
-
-      if(!item.image) continue;
+    if(image){
 
       try{
 
         sessionStorage.setItem(
-          `math_ai_image_${item.index}`,
-          item.image
+          `math_ai_image_${i}`,
+          image
         );
 
       }catch(error){
@@ -462,34 +472,19 @@ async function generateImages(slides){
           "Сүрөт cache'ге баткан жок"
         );
       }
-
     }
 
-
-    const done =
-    Math.min(
-      start+batch.length,
-      slides.length
-    );
-
-
-    updateStatus(
-      `Даяр: ${done} / ${slides.length}`,
-      20+Math.round(
-        (done/slides.length)*75
-      )
-    );
-
+    if(i<slides.length-1){
+      await sleep(4000);
+    }
   }
 }
-
 
 form.addEventListener(
 "submit",
 async function(e){
 
   e.preventDefault();
-
 
   const formData={
 
@@ -510,21 +505,17 @@ async function(e){
 
     extra:
     document.getElementById("extra").value
-
   };
-
 
   btn.disabled=true;
 
   btn.textContent=
   "AI даярдап жатат...";
 
-
   updateStatus(
     "Слайддардын тексти даярдалууда...",
     5
   );
-
 
   try{
 
@@ -535,8 +526,7 @@ async function(e){
         method:"POST",
 
         headers:{
-          "Content-Type":
-          "application/json"
+          "Content-Type":"application/json"
         },
 
         body:
@@ -544,10 +534,8 @@ async function(e){
       }
     );
 
-
     const result =
     await response.json();
-
 
     if(!response.ok){
 
@@ -557,10 +545,8 @@ async function(e){
       );
     }
 
-
     const slides =
     result?.presentation?.slides;
-
 
     if(
       !Array.isArray(slides) ||
@@ -572,15 +558,9 @@ async function(e){
       );
     }
 
-
-    /*
-    ЭСКИ ПРЕЗЕНТАЦИЯНЫ ТАЗАЛОО
-    */
-
     localStorage.removeItem(
       "math_ai_presentation"
     );
-
 
     for(let i=0;i<30;i++){
 
@@ -591,44 +571,27 @@ async function(e){
         );
 
       }catch(error){}
-
     }
-
-
-    /*
-    ЖАҢЫ ПРЕЗЕНТАЦИЯ
-    */
 
     localStorage.setItem(
       "math_ai_presentation",
       JSON.stringify(result)
     );
 
-
     updateStatus(
       "Текст даяр. AI сүрөттөрдү даярдап жатат...",
       20
     );
 
-
-    /*
-    СҮРӨТТӨР
-    */
-
-    await generateImages(
-      slides
-    );
-
+    await generateImages(slides);
 
     updateStatus(
       "Презентация даяр! Ачылып жатат...",
       100
     );
 
-
     btn.textContent=
     "Даяр ✓";
-
 
     setTimeout(
       function(){
@@ -639,7 +602,6 @@ async function(e){
       },
       600
     );
-
 
   }catch(error){
 
@@ -658,7 +620,6 @@ async function(e){
 
     btn.textContent=
     "✨ AI менен презентация түзүү";
-
   }
 
 });
