@@ -1,375 +1,289 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Math AI Presentation</title>
-
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
-
-    body{
-      font-family:Arial, sans-serif;
-      background:#07111f;
-      color:white;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:16px 22px;
-      gap:12px;
-    }
-
-    .logo{
-      font-size:22px;
-      font-weight:900;
-    }
-
-    .logo span{
-      color:#819cff;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-    }
-
-    button{
-      border:none;
-      border-radius:12px;
-      padding:11px 16px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:14px;
-    }
-
-    .back-btn{
-      background:#18243a;
-      color:white;
-    }
-
-    .pdf-btn{
-      background:linear-gradient(90deg,#5f7cff,#8d62ff);
-      color:white;
-    }
-
-    .viewer{
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    }
-
-    .slide{
-      width:min(1200px,94vw);
-      aspect-ratio:16 / 9;
-
-      background:
-        radial-gradient(circle at top left,
-        rgba(100,130,255,.18),
-        transparent 35%),
-
-        linear-gradient(
-        135deg,
-        #0c1729,
-        #101b31
-        );
-
-      border:1px solid rgba(255,255,255,.1);
-
-      border-radius:24px;
-
-      box-shadow:
-        0 30px 90px rgba(0,0,0,.45);
-
-      overflow:hidden;
-
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-
-      position:relative;
-    }
-
-    .slide::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          120deg,
-          rgba(255,255,255,.025),
-          transparent
-        );
-      pointer-events:none;
-    }
-
-    .text-side{
-      padding:7%;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      position:relative;
-      z-index:2;
-    }
-
-    .slide-number{
-      font-size:13px;
-      color:#8da5ff;
-      margin-bottom:18px;
-      font-weight:800;
-      letter-spacing:1px;
-    }
-
-    h1{
-      font-size:clamp(28px,3.2vw,54px);
-      line-height:1.08;
-      margin-bottom:25px;
-    }
-
-    ul{
-      padding-left:22px;
-    }
-
-    li{
-      margin-bottom:15px;
-      font-size:clamp(15px,1.5vw,23px);
-      line-height:1.45;
-      color:#d9e1ef;
-    }
-
-    .image-side{
-      padding:4%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .image-box{
-      width:100%;
-      height:82%;
-      border-radius:22px;
-      overflow:hidden;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(90,110,255,.15),
-          rgba(150,80,255,.12)
-        );
-
-      border:1px solid rgba(255,255,255,.09);
-
-      display:flex;
-      justify-content:center;
-      align-items:center;
-
-      color:#9fb0c7;
-
-      font-size:14px;
-      text-align:center;
-    }
-
-    .image-box img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .controls{
-      padding:15px 20px 22px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:16px;
-    }
-
-    .nav-btn{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:#18243a;
-      color:white;
-      font-size:19px;
-    }
-
-    .dots{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:7px;
-      max-width:500px;
-    }
-
-    .dot{
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      background:#3c4b62;
-      cursor:pointer;
-    }
-
-    .dot.active{
-      background:#7c94ff;
-      transform:scale(1.3);
-    }
-
-    #printArea{
-      display:none;
-    }
-
-    @media(max-width:800px){
-
-      .topbar{
-        padding:12px;
-      }
-
-      .slide{
-        grid-template-columns:1fr;
-        aspect-ratio:auto;
-        min-height:76vh;
-      }
-
-      .text-side{
-        padding:28px;
-      }
-
-      .image-side{
-        padding:0 28px 28px;
-      }
-
-      .image-box{
-        height:260px;
-      }
-
-      h1{
-        font-size:30px;
-      }
-
-      li{
-        font-size:17px;
-      }
-    }
-
-    @media print{
-
-      @page{
-        size:landscape;
-        margin:0;
-      }
-
-      body{
-        background:white;
-      }
-
-      .topbar,
-      .viewer,
-      .controls{
-        display:none !important;
-      }
-
-      #printArea{
-        display:block !important;
-      }
-
-      .print-slide{
-        width:100vw;
-        height:100vh;
-
-        page-break-after:always;
-        break-after:page;
-
-        display:grid;
-        grid-template-columns:1.05fr .95fr;
-
-        background:#0c1729;
-        color:white;
-
-        overflow:hidden;
-      }
-
-      .print-slide:last-child{
-        page-break-after:auto;
-      }
-
-      .print-text{
-        padding:7%;
-        display:flex;
-        justify-content:center;
-        flex-direction:column;
-      }
-
-      .print-text h1{
-        font-size:38px;
-        margin-bottom:22px;
-      }
-
-      .print-text li{
-        font-size:20px;
-        margin-bottom:12px;
-      }
-
-      .print-image{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:5%;
-      }
-
-      .print-image img{
-        width:100%;
-        height:75%;
-        object-fit:cover;
-        border-radius:18px;
-      }
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Math AI Presentation</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#07111f;
+  color:white;
+  min-height:100vh;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 22px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+}
+
+.logo span{
+  color:#819cff;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.back-btn{
+  background:#18243a;
+  color:white;
+}
+
+.pdf-btn{
+  background:linear-gradient(90deg,#5f7cff,#8d62ff);
+  color:white;
+}
+
+.viewer{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.slide{
+  width:min(1200px,94vw);
+  aspect-ratio:16/9;
+
+  background:
+    radial-gradient(circle at top left,rgba(100,130,255,.18),transparent 35%),
+    linear-gradient(135deg,#0c1729,#101b31);
+
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  overflow:hidden;
+
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+
+  box-shadow:0 30px 90px rgba(0,0,0,.45);
+}
+
+.text-side{
+  padding:7%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.slide-number{
+  color:#8da5ff;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+h1{
+  font-size:clamp(28px,3.2vw,54px);
+  margin-bottom:25px;
+}
+
+ul{
+  padding-left:22px;
+}
+
+li{
+  margin-bottom:15px;
+  font-size:clamp(15px,1.5vw,23px);
+  line-height:1.45;
+  color:#d9e1ef;
+}
+
+.image-side{
+  padding:4%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.image-box{
+  width:100%;
+  height:82%;
+  border-radius:22px;
+  overflow:hidden;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+
+  color:#9fb0c7;
+}
+
+.image-box img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  padding:15px 20px 25px;
+}
+
+.nav-btn{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#18243a;
+  color:white;
+  font-size:19px;
+}
+
+.dots{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#3c4b62;
+}
+
+.dot.active{
+  background:#7c94ff;
+}
+
+.error{
+  max-width:700px;
+  margin:80px auto;
+  padding:30px;
+  text-align:center;
+  background:#101b31;
+  border-radius:20px;
+}
+
+#printArea{
+  display:none;
+}
+
+@media(max-width:800px){
+  .slide{
+    grid-template-columns:1fr;
+    aspect-ratio:auto;
+  }
+
+  .image-box{
+    min-height:260px;
+  }
+}
+
+@media print{
+  @page{
+    size:landscape;
+    margin:0;
+  }
+
+  .topbar,
+  .viewer,
+  .controls{
+    display:none !important;
+  }
+
+  #printArea{
+    display:block !important;
+  }
+
+  .print-slide{
+    width:100vw;
+    height:100vh;
+    page-break-after:always;
+
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+
+    background:#0c1729;
+    color:white;
+  }
+
+  .print-text{
+    padding:7%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  .print-image{
+    padding:5%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .print-image img{
+    width:100%;
+    height:75%;
+    object-fit:cover;
+    border-radius:18px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="topbar">
+<div class="topbar">
 
-    <div class="logo">
-      Math<span>AI</span>
-    </div>
+  <div class="logo">
+    Math<span>AI</span>
+  </div>
 
-    <div class="actions">
+  <div class="actions">
 
-      <button
-        class="back-btn"
-        onclick="window.location.href='index.html'">
-        ← Жаңы түзүү
-      </button>
+    <button
+      class="back-btn"
+      onclick="location.href='index.html'">
+      ← Жаңы түзүү
+    </button>
 
-      <button
-        class="pdf-btn"
-        id="pdfBtn">
-        PDF сактоо
-      </button>
-
-    </div>
+    <button
+      class="pdf-btn"
+      id="pdfBtn">
+      PDF сактоо
+    </button>
 
   </div>
 
+</div>
+
+<div id="main">
 
   <div class="viewer">
 
-    <div
-      class="slide"
-      id="slide">
+    <div class="slide">
 
       <div class="text-side">
 
@@ -384,14 +298,13 @@
 
       </div>
 
-
       <div class="image-side">
 
         <div
           class="image-box"
           id="imageBox">
 
-          AI сүрөт жүктөлүүдө...
+          Сүрөт жүктөлүүдө...
 
         </div>
 
@@ -400,7 +313,6 @@
     </div>
 
   </div>
-
 
   <div class="controls">
 
@@ -423,11 +335,55 @@
 
   </div>
 
+</div>
 
-  <div id="printArea"></div>
+<div id="printArea"></div>
+
+<script>
+
+let slides = [];
+let currentIndex = 0;
+
+const main =
+  document.getElementById("main");
+
+const title =
+  document.getElementById("title");
+
+const points =
+  document.getElementById("points");
+
+const slideNumber =
+  document.getElementById("slideNumber");
+
+const imageBox =
+  document.getElementById("imageBox");
+
+const dots =
+  document.getElementById("dots");
 
 
-  <script>
+function showError(message){
+
+  main.innerHTML = `
+    <div class="error">
+      <h2>Презентация ачылган жок</h2>
+      <br>
+      <p>${message}</p>
+      <br>
+      <button
+        class="back-btn"
+        onclick="location.href='index.html'">
+        Башкы бетке кайтуу
+      </button>
+    </div>
+  `;
+}
+
+
+function loadPresentation(){
+
+  try{
 
     const raw =
       localStorage.getItem(
@@ -435,463 +391,504 @@
       );
 
     if(!raw){
-      window.location.href =
-        "index.html";
+
+      showError(
+        "Презентация маалыматы табылган жок. Жаңы презентация түзүңүз."
+      );
+
+      return false;
     }
+
 
     const saved =
       JSON.parse(raw);
 
+
     const presentation =
-      saved.presentation || saved;
-
-    const slides =
-      presentation.slides || [];
-
-    let currentIndex = 0;
+      saved?.presentation
+      ? saved.presentation
+      : saved;
 
 
-    const title =
-      document.getElementById("title");
+    if(
+      !presentation ||
+      !Array.isArray(presentation.slides) ||
+      presentation.slides.length === 0
+    ){
 
-    const points =
-      document.getElementById("points");
+      console.log(saved);
 
-    const slideNumber =
-      document.getElementById("slideNumber");
+      showError(
+        "Слайддардын маалыматы туура эмес."
+      );
 
-    const imageBox =
-      document.getElementById("imageBox");
-
-    const dots =
-      document.getElementById("dots");
-
-
-    function getCachedImage(index){
-
-      try{
-        return sessionStorage.getItem(
-          `math_ai_image_${index}`
-        );
-      }catch{
-        return null;
-      }
-
+      return false;
     }
 
 
-    async function generateImage(index){
+    slides =
+      presentation.slides;
 
-      const slide = slides[index];
 
-      if(!slide?.imagePrompt){
-        return null;
-      }
+    return true;
+
+  }catch(error){
+
+    console.error(
+      "Presentation load error:",
+      error
+    );
+
+    showError(
+      "Презентация маалыматын окууда ката кетти."
+    );
+
+    return false;
+  }
+
+}
+
+
+function getCachedImage(index){
+
+  try{
+
+    return sessionStorage.getItem(
+      `math_ai_image_${index}`
+    );
+
+  }catch(error){
+
+    return null;
+
+  }
+
+}
+
+
+async function generateImage(index){
+
+  const slide =
+    slides[index];
+
+  if(!slide?.imagePrompt){
+    return null;
+  }
+
+
+  try{
+
+    const response =
+      await fetch(
+        "/api/image",
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+            prompt:slide.imagePrompt
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(
+      response.ok &&
+      data.success &&
+      data.image
+    ){
 
       try{
 
-        const response =
-          await fetch(
-            "/api/image",
-            {
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:JSON.stringify({
-                prompt:
-                  slide.imagePrompt
-              })
-            }
-          );
-
-        const data =
-          await response.json();
-
-        if(
-          response.ok &&
-          data.success &&
+        sessionStorage.setItem(
+          `math_ai_image_${index}`,
           data.image
-        ){
-
-          try{
-
-            sessionStorage.setItem(
-              `math_ai_image_${index}`,
-              data.image
-            );
-
-          }catch(e){
-            console.log(
-              "Cache толду"
-            );
-          }
-
-          return data.image;
-        }
+        );
 
       }catch(error){
 
-        console.error(error);
+        console.warn(
+          "Сүрөт cache'ге сакталган жок"
+        );
 
       }
 
-      return null;
+
+      return data.image;
+
     }
 
 
-    async function renderSlide(){
-
-      if(!slides.length){
-        return;
-      }
-
-      const slide =
-        slides[currentIndex];
-
-      slideNumber.textContent =
-        `СЛАЙД ${currentIndex + 1} / ${slides.length}`;
-
-      title.textContent =
-        slide.title || "";
-
-      points.innerHTML = "";
-
-      const list =
-        Array.isArray(slide.points)
-          ? slide.points
-          : [];
-
-      list.forEach(point=>{
-
-        const li =
-          document.createElement("li");
-
-        li.textContent = point;
-
-        points.appendChild(li);
-
-      });
-
-
-      imageBox.innerHTML =
-        "AI сүрөт жүктөлүүдө...";
-
-
-      let image =
-        getCachedImage(currentIndex);
-
-
-      if(!image){
-
-        image =
-          await generateImage(
-            currentIndex
-          );
-
-      }
-
-
-      if(image){
-
-        imageBox.innerHTML = "";
-
-        const img =
-          document.createElement("img");
-
-        img.src = image;
-
-        imageBox.appendChild(img);
-
-      }else{
-
-        imageBox.textContent =
-          "Сүрөт даяр болгон жок";
-
-      }
-
-
-      renderDots();
-    }
-
-
-    function renderDots(){
-
-      dots.innerHTML = "";
-
-      slides.forEach(
-        (_,index)=>{
-
-          const dot =
-            document.createElement("div");
-
-          dot.className =
-            "dot" +
-            (
-              index === currentIndex
-              ? " active"
-              : ""
-            );
-
-          dot.onclick = ()=>{
-
-            currentIndex = index;
-
-            renderSlide();
-
-          };
-
-          dots.appendChild(dot);
-
-        }
-      );
-    }
-
-
-    document.getElementById(
-      "prevBtn"
-    ).onclick = ()=>{
-
-      if(currentIndex > 0){
-
-        currentIndex--;
-
-        renderSlide();
-
-      }
-
-    };
-
-
-    document.getElementById(
-      "nextBtn"
-    ).onclick = ()=>{
-
-      if(
-        currentIndex <
-        slides.length - 1
-      ){
-
-        currentIndex++;
-
-        renderSlide();
-
-      }
-
-    };
-
-
-    document.addEventListener(
-      "keydown",
-      e=>{
-
-        if(e.key === "ArrowRight"){
-
-          if(
-            currentIndex <
-            slides.length - 1
-          ){
-
-            currentIndex++;
-
-            renderSlide();
-
-          }
-
-        }
-
-        if(e.key === "ArrowLeft"){
-
-          if(currentIndex > 0){
-
-            currentIndex--;
-
-            renderSlide();
-
-          }
-
-        }
-
-      }
+    console.error(
+      "Image API:",
+      data
     );
 
 
-    async function makeSureAllImagesExist(){
+  }catch(error){
 
-      for(
-        let i = 0;
-        i < slides.length;
-        i++
-      ){
+    console.error(
+      "Image generation:",
+      error
+    );
 
-        let img =
-          getCachedImage(i);
-
-        if(!img){
-
-          await generateImage(i);
-
-        }
-
-      }
-
-    }
+  }
 
 
-    function createPrintSlides(){
+  return null;
 
-      const printArea =
-        document.getElementById(
-          "printArea"
-        );
-
-      printArea.innerHTML = "";
+}
 
 
-      slides.forEach(
-        (slide,index)=>{
+async function renderSlide(){
 
-          const page =
-            document.createElement(
-              "div"
-            );
-
-          page.className =
-            "print-slide";
+  if(!slides.length){
+    return;
+  }
 
 
-          const text =
-            document.createElement(
-              "div"
-            );
-
-          text.className =
-            "print-text";
+  const slide =
+    slides[currentIndex];
 
 
-          const h1 =
-            document.createElement(
-              "h1"
-            );
-
-          h1.textContent =
-            slide.title || "";
+  slideNumber.textContent =
+    `СЛАЙД ${currentIndex + 1} / ${slides.length}`;
 
 
-          const ul =
-            document.createElement(
-              "ul"
-            );
+  title.textContent =
+    slide.title || "Аталышы жок";
 
 
-          (
-            slide.points || []
-          ).forEach(
-            point=>{
-
-              const li =
-                document.createElement(
-                  "li"
-                );
-
-              li.textContent =
-                point;
-
-              ul.appendChild(li);
-
-            }
-          );
+  points.innerHTML = "";
 
 
-          text.appendChild(h1);
-
-          text.appendChild(ul);
-
-
-          const imageSide =
-            document.createElement(
-              "div"
-            );
-
-          imageSide.className =
-            "print-image";
+  const list =
+    Array.isArray(slide.points)
+    ? slide.points
+    : [];
 
 
-          const image =
-            getCachedImage(index);
+  list.forEach(point=>{
+
+    const li =
+      document.createElement("li");
+
+    li.textContent =
+      point;
+
+    points.appendChild(li);
+
+  });
 
 
-          if(image){
-
-            const img =
-              document.createElement(
-                "img"
-              );
-
-            img.src = image;
-
-            imageSide.appendChild(
-              img
-            );
-
-          }
+  imageBox.textContent =
+    "Сүрөт жүктөлүүдө...";
 
 
-          page.appendChild(text);
+  let image =
+    getCachedImage(
+      currentIndex
+    );
 
-          page.appendChild(
-            imageSide
-          );
 
-          printArea.appendChild(page);
+  if(!image){
 
-        }
+    image =
+      await generateImage(
+        currentIndex
       );
 
-    }
+  }
 
 
-    document.getElementById(
-      "pdfBtn"
-    ).onclick =
-      async ()=>{
+  if(image){
 
-        const btn =
-          document.getElementById(
-            "pdfBtn"
-          );
+    imageBox.innerHTML = "";
 
-        btn.disabled = true;
+    const img =
+      document.createElement("img");
 
-        btn.textContent =
-          "PDF даярдалууда...";
+    img.src = image;
 
+    imageBox.appendChild(img);
 
-        await makeSureAllImagesExist();
+  }else{
 
-        createPrintSlides();
+    imageBox.textContent =
+      "Сүрөт жок";
+
+  }
 
 
-        setTimeout(()=>{
+  renderDots();
 
-          window.print();
+}
 
-          btn.disabled = false;
 
-          btn.textContent =
-            "PDF сактоо";
+function renderDots(){
 
-        },500);
+  dots.innerHTML = "";
+
+
+  slides.forEach(
+    (_,index)=>{
+
+      const dot =
+        document.createElement("div");
+
+      dot.className =
+        index === currentIndex
+        ? "dot active"
+        : "dot";
+
+
+      dot.onclick = ()=>{
+
+        currentIndex =
+          index;
+
+        renderSlide();
 
       };
 
 
+      dots.appendChild(dot);
+
+    }
+  );
+
+}
+
+
+document.getElementById(
+  "prevBtn"
+).onclick = ()=>{
+
+  if(currentIndex > 0){
+
+    currentIndex--;
+
     renderSlide();
 
-  </script>
+  }
+
+};
+
+
+document.getElementById(
+  "nextBtn"
+).onclick = ()=>{
+
+  if(
+    currentIndex <
+    slides.length - 1
+  ){
+
+    currentIndex++;
+
+    renderSlide();
+
+  }
+
+};
+
+
+async function ensureImages(){
+
+  for(
+    let i = 0;
+    i < slides.length;
+    i++
+  ){
+
+    if(
+      !getCachedImage(i)
+    ){
+
+      await generateImage(i);
+
+    }
+
+  }
+
+}
+
+
+function createPrintSlides(){
+
+  const area =
+    document.getElementById(
+      "printArea"
+    );
+
+  area.innerHTML = "";
+
+
+  slides.forEach(
+    (slide,index)=>{
+
+      const page =
+        document.createElement(
+          "div"
+        );
+
+      page.className =
+        "print-slide";
+
+
+      const text =
+        document.createElement(
+          "div"
+        );
+
+      text.className =
+        "print-text";
+
+
+      const heading =
+        document.createElement(
+          "h1"
+        );
+
+      heading.textContent =
+        slide.title || "";
+
+
+      const ul =
+        document.createElement(
+          "ul"
+        );
+
+
+      (
+        Array.isArray(slide.points)
+        ? slide.points
+        : []
+      ).forEach(point=>{
+
+        const li =
+          document.createElement(
+            "li"
+          );
+
+        li.textContent =
+          point;
+
+        ul.appendChild(li);
+
+      });
+
+
+      text.appendChild(
+        heading
+      );
+
+      text.appendChild(
+        ul
+      );
+
+
+      const imageSide =
+        document.createElement(
+          "div"
+        );
+
+      imageSide.className =
+        "print-image";
+
+
+      const cached =
+        getCachedImage(
+          index
+        );
+
+
+      if(cached){
+
+        const img =
+          document.createElement(
+            "img"
+          );
+
+        img.src =
+          cached;
+
+        imageSide.appendChild(
+          img
+        );
+
+      }
+
+
+      page.appendChild(
+        text
+      );
+
+      page.appendChild(
+        imageSide
+      );
+
+      area.appendChild(
+        page
+      );
+
+    }
+  );
+
+}
+
+
+document.getElementById(
+  "pdfBtn"
+).onclick =
+async ()=>{
+
+  const btn =
+    document.getElementById(
+      "pdfBtn"
+    );
+
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    "PDF даярдалууда...";
+
+
+  await ensureImages();
+
+  createPrintSlides();
+
+
+  setTimeout(()=>{
+
+    window.print();
+
+    btn.disabled =
+      false;
+
+    btn.textContent =
+      "PDF сактоо";
+
+  },500);
+
+};
+
+
+if(loadPresentation()){
+
+  renderSlide();
+
+}
+
+</script>
 
 </body>
 </html>
