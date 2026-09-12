@@ -35,36 +35,48 @@ export default async function handler(req, res) {
     );
 
     const prompt = `
-Сен тажрыйбалуу математика мугалими жана профессионал презентация түзүүчүсүң.
+Сен профессионал математика мугалими жана презентация дизайнерисиң.
 
-Мага мектеп сабагы үчүн даяр презентация түз.
+Мектеп сабагына заманбап, визуалдуу презентация түз.
 
-МААЛЫМАТ:
 Класс: ${grade}
 Тема: ${topic}
 Тил: ${language}
 Слайд саны: ${slideCount}
-Дизайн стили: ${style || "Заманбап"}
+Стиль: ${style || "VIP"}
 Кошумча талап: ${extra || "Жок"}
 
-ТАЛАПТАР:
-- Материал ${grade} окуучуларына түшүнүктүү болсун.
-- Так жана жеңил тил колдон.
-- Математикалык аныктамалар туура болсун.
-- Формула керек болсо кадимки текст форматында жаз.
-- Мисалдарды этап-этабы менен түшүндүр.
-- Өтө көп текст жазба.
-- Ар бир слайд презентацияга ылайыктуу кыска болсун.
-- Слайддардын бири сабактын максаты болсун.
-- Негизги түшүндүрмөлөр болсун.
-- Кеминде 2 практикалык мисал болсун.
-- Окуучулар үчүн тапшырмалар болсун.
-- Акыркы слайд жыйынтык жана үй тапшырмасы болсун.
-- Так ${slideCount} слайд түз.
+МААНИЛҮҮ ТАЛАПТАР:
 
-ЖООПТУ JSON ГАНА БЕР.
-Markdown колдонбо.
-\`\`\`json деген белгилерди жазба.
+1. Так ${slideCount} слайд түз.
+2. Материал ${grade} деңгээлине ылайык болсун.
+3. Ар бир слайдда текст өтө көп болбосун.
+4. Формулалар математикалык жактан туура болсун.
+5. Кеминде 2 мисал болсун.
+6. Практикалык тапшырмалар кош.
+7. Акыркы слайд жыйынтык жана үй тапшырмасы болсун.
+
+АР БИР СЛАЙД ҮЧҮН:
+- title
+- 2-5 кыска point
+- imagePrompt
+
+imagePrompt англис тилинде болсун.
+
+imagePrompt:
+- слайддын темасына түз байланыштуу болсун;
+- мектептик жана билим берүүчү болсун;
+- профессионал презентация үчүн жарактуу болсун;
+- сүрөттө текст же жазуу болбосун;
+- clean modern educational illustration;
+- landscape 16:9 композициясында болсун.
+
+Мисалы:
+"Modern educational illustration of a right triangle showing geometric relationships, clean blue background, no text, professional classroom presentation, landscape 16:9"
+
+ЖООП JSON ГАНА БОЛСУН.
+Markdown жазба.
+\`\`\` белгилерин колдонбо.
 
 Формат:
 
@@ -72,15 +84,16 @@ Markdown колдонбо.
   "topic": "${topic}",
   "grade": "${grade}",
   "language": "${language}",
-  "style": "${style || "Заманбап"}",
+  "style": "${style || "VIP"}",
   "slides": [
     {
       "title": "Слайддын аталышы",
       "points": [
-        "Биринчи кыска пункт",
-        "Экинчи кыска пункт",
-        "Үчүнчү кыска пункт"
-      ]
+        "Биринчи пункт",
+        "Экинчи пункт",
+        "Үчүнчү пункт"
+      ],
+      "imagePrompt": "English image generation prompt here"
     }
   ]
 }
@@ -135,8 +148,6 @@ Markdown колдонбо.
     }
 
     if (!text) {
-      console.error("No AI text:", openaiData);
-
       return res.status(500).json({
         error: "AI текст кайтарган жок"
       });
@@ -151,7 +162,7 @@ Markdown колдонбо.
 
     try {
       presentation = JSON.parse(text);
-    } catch (parseError) {
+    } catch (error) {
       console.error("JSON parse error:", text);
 
       return res.status(500).json({
@@ -171,7 +182,7 @@ Markdown колдонбо.
     presentation.topic = topic;
     presentation.grade = grade;
     presentation.language = language;
-    presentation.style = style || "Заманбап";
+    presentation.style = style || "VIP";
 
     return res.status(200).json({
       success: true,
