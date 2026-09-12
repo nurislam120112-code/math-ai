@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Math AI — Презентация</title>
 
   <style>
@@ -29,7 +29,7 @@
     }
 
     .topbar-inner {
-      width: min(1200px, 94%);
+      width: min(1250px, 94%);
       min-height: 72px;
       margin: auto;
       display: flex;
@@ -76,7 +76,7 @@
     }
 
     .page {
-      width: min(1200px, 94%);
+      width: min(1250px, 94%);
       margin: auto;
       padding: 35px 0 80px;
     }
@@ -87,7 +87,7 @@
     }
 
     .page-head h1 {
-      font-size: clamp(28px, 5vw, 50px);
+      font-size: clamp(28px, 5vw, 48px);
       margin-bottom: 10px;
     }
 
@@ -119,7 +119,7 @@
     }
 
     .slide-wrapper {
-      width: min(1000px, 100%);
+      width: min(1150px, 100%);
     }
 
     .slide {
@@ -128,74 +128,108 @@
       border-radius: 28px;
       overflow: hidden;
       position: relative;
-      display: flex;
-      align-items: center;
-      padding: clamp(28px, 6vw, 80px);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(77,124,255,0.45), transparent 30%),
+        radial-gradient(circle at 70% 90%, rgba(142,74,255,0.25), transparent 40%),
+        linear-gradient(135deg, #08111f, #0d1a30);
       box-shadow: 0 30px 100px rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.1);
-
-      background:
-        radial-gradient(circle at 15% 20%, rgba(77, 124, 255, 0.5), transparent 30%),
-        radial-gradient(circle at 80% 30%, rgba(142, 74, 255, 0.4), transparent 35%),
-        radial-gradient(circle at 50% 100%, rgba(0, 217, 255, 0.25), transparent 40%),
-        linear-gradient(135deg, #07111f, #0c1930);
     }
 
-    .slide::before {
-      content: "";
-      position: absolute;
-      width: 350px;
-      height: 350px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      top: -130px;
-      right: -120px;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .slide::after {
-      content: "Math AI";
-      position: absolute;
-      bottom: 18px;
-      right: 25px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.45);
-    }
-
-    .slide-content {
-      width: 100%;
-      max-width: 850px;
+    .text-side {
+      padding: clamp(28px, 5vw, 65px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       position: relative;
       z-index: 2;
     }
 
     .slide-number {
       display: inline-block;
+      width: max-content;
       padding: 8px 13px;
       border-radius: 999px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       background: rgba(255,255,255,0.1);
       font-size: 13px;
       color: #dce6ff;
     }
 
     .slide h2 {
-      font-size: clamp(28px, 5vw, 54px);
+      font-size: clamp(26px, 4.4vw, 50px);
       line-height: 1.08;
-      margin-bottom: 25px;
+      margin-bottom: 24px;
     }
 
     .slide ul {
-      padding-left: 25px;
+      padding-left: 24px;
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .slide li,
     .slide p {
-      font-size: clamp(16px, 2vw, 23px);
+      font-size: clamp(15px, 1.8vw, 21px);
       line-height: 1.55;
       color: #d4deed;
+    }
+
+    .image-side {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .image-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-side::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(8,17,31,0.9) 0%,
+        rgba(8,17,31,0.18) 28%,
+        rgba(8,17,31,0) 55%
+      );
+      pointer-events: none;
+    }
+
+    .image-loading {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 30px;
+      color: #b6c4d8;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(124,156,255,0.18), transparent 40%),
+        #0b1627;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.12);
+      border-top-color: #7c9cff;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .controls {
@@ -249,7 +283,7 @@
       color: #93a1b5;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 750px) {
       .topbar-inner {
         padding: 12px 0;
         flex-direction: column;
@@ -258,9 +292,25 @@
 
       .slide {
         aspect-ratio: auto;
-        min-height: 520px;
-        border-radius: 20px;
+        grid-template-columns: 1fr;
       }
+
+      .image-side {
+        min-height: 300px;
+      }
+
+      .image-side::after {
+        background: linear-gradient(
+          180deg,
+          rgba(8,17,31,0.35),
+          rgba(8,17,31,0)
+        );
+      }
+    }
+
+    @page {
+      size: landscape;
+      margin: 0;
     }
 
     @media print {
@@ -278,6 +328,7 @@
       .page {
         width: 100%;
         padding: 0;
+        margin: 0;
       }
 
       .viewer {
@@ -287,13 +338,16 @@
       .slide-wrapper {
         width: 100%;
         page-break-after: always;
+        break-after: page;
       }
 
       .slide {
-        width: 100%;
+        width: 100vw;
         height: 100vh;
+        aspect-ratio: auto;
         border-radius: 0;
         box-shadow: none;
+        border: none;
       }
     }
   </style>
@@ -309,6 +363,7 @@
       </div>
 
       <div class="actions">
+
         <a href="index.html" class="link-btn secondary">
           ← Жаңы презентация
         </a>
@@ -316,6 +371,7 @@
         <button class="primary" id="pdfBtn">
           PDF жүктөө
         </button>
+
       </div>
 
     </div>
@@ -324,10 +380,20 @@
   <main class="page">
 
     <div class="page-head">
-      <h1 id="presentationTitle">Презентация</h1>
-      <p>AI түзгөн даяр математика слайддары</p>
 
-      <div class="presentation-info" id="presentationInfo"></div>
+      <h1 id="presentationTitle">
+        Презентация
+      </h1>
+
+      <p>
+        AI түзгөн визуалдуу математика слайддары
+      </p>
+
+      <div
+        class="presentation-info"
+        id="presentationInfo">
+      </div>
+
     </div>
 
     <div id="viewer" class="viewer"></div>
@@ -351,38 +417,136 @@
         .replaceAll(">", "&gt;");
     }
 
-    function loadPresentation() {
-      const saved = localStorage.getItem("math_ai_presentation");
+    function getCachedImage(index) {
+      return sessionStorage.getItem(
+        `math_ai_image_${index}`
+      );
+    }
 
-      if (!saved) {
-        viewer.innerHTML = `
-          <div class="empty">
-            <h2>Презентация табылган жок</h2>
-            <p>Башкы бетке кайтып, жаңы презентация түзүңүз.</p>
-          </div>
-        `;
+    function setCachedImage(index, image) {
+      try {
+        sessionStorage.setItem(
+          `math_ai_image_${index}`,
+          image
+        );
+      } catch (error) {
+        console.log("Image cache full");
+      }
+    }
+
+    async function generateImage(index) {
+
+      const slide = slides[index];
+
+      if (!slide || !slide.imagePrompt) {
+        return;
+      }
+
+      const cached = getCachedImage(index);
+
+      if (cached) {
         return;
       }
 
       try {
-        const data = JSON.parse(saved);
-        presentationData = data.presentation || data;
 
-        slides = presentationData.slides || [];
+        const response = await fetch("/api/image", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            prompt: slide.imagePrompt
+          })
+        });
 
-        titleBox.textContent =
-          presentationData.topic || "Математика презентациясы";
+        const data = await response.json();
 
-        infoBox.innerHTML = `
-          ${presentationData.grade ? `<span class="pill">${escapeHTML(presentationData.grade)}</span>` : ""}
-          ${presentationData.language ? `<span class="pill">${escapeHTML(presentationData.language)}</span>` : ""}
-          ${presentationData.style ? `<span class="pill">${escapeHTML(presentationData.style)}</span>` : ""}
-          <span class="pill">${slides.length} слайд</span>
-        `;
+        if (
+          response.ok &&
+          data.success &&
+          data.image
+        ) {
 
-        renderSlide();
+          setCachedImage(index, data.image);
+
+          if (currentSlide === index) {
+            renderSlide(false);
+          }
+        }
 
       } catch (error) {
+        console.error(
+          "Image generation failed:",
+          error
+        );
+      }
+    }
+
+    function loadPresentation() {
+
+      const saved =
+        localStorage.getItem(
+          "math_ai_presentation"
+        );
+
+      if (!saved) {
+
+        viewer.innerHTML = `
+          <div class="empty">
+            <h2>Презентация табылган жок</h2>
+            <p>
+              Башкы бетке кайтып,
+              жаңы презентация түзүңүз.
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
+      try {
+
+        const data = JSON.parse(saved);
+
+        presentationData =
+          data.presentation || data;
+
+        slides =
+          presentationData.slides || [];
+
+        titleBox.textContent =
+          presentationData.topic ||
+          "Математика презентациясы";
+
+        infoBox.innerHTML = `
+          ${
+            presentationData.grade
+              ? `<span class="pill">${escapeHTML(presentationData.grade)}</span>`
+              : ""
+          }
+
+          ${
+            presentationData.language
+              ? `<span class="pill">${escapeHTML(presentationData.language)}</span>`
+              : ""
+          }
+
+          ${
+            presentationData.style
+              ? `<span class="pill">${escapeHTML(presentationData.style)}</span>`
+              : ""
+          }
+
+          <span class="pill">
+            ${slides.length} слайд
+          </span>
+        `;
+
+        renderSlide(true);
+
+      } catch (error) {
+
         viewer.innerHTML = `
           <div class="empty">
             Маалымат ачылган жок.
@@ -391,73 +555,123 @@
       }
     }
 
-    function renderSlide() {
-      if (!slides.length) {
-        viewer.innerHTML = `
-          <div class="empty">
-            Слайддар табылган жок.
-          </div>
-        `;
-        return;
-      }
-
-      const slide = slides[currentSlide];
-
-      let contentHTML = "";
+    function createContent(slide) {
 
       if (Array.isArray(slide.points)) {
-        contentHTML = `
+
+        return `
           <ul>
             ${slide.points.map(point =>
               `<li>${escapeHTML(point)}</li>`
             ).join("")}
           </ul>
         `;
-      } else if (Array.isArray(slide.content)) {
-        contentHTML = `
+      }
+
+      if (Array.isArray(slide.content)) {
+
+        return `
           <ul>
             ${slide.content.map(point =>
               `<li>${escapeHTML(point)}</li>`
             ).join("")}
           </ul>
         `;
+      }
+
+      return `
+        <p>
+          ${escapeHTML(
+            slide.content ||
+            slide.text ||
+            slide.description ||
+            ""
+          )}
+        </p>
+      `;
+    }
+
+    function renderSlide(shouldGenerate = true) {
+
+      if (!slides.length) {
+
+        viewer.innerHTML = `
+          <div class="empty">
+            Слайддар табылган жок.
+          </div>
+        `;
+
+        return;
+      }
+
+      const slide =
+        slides[currentSlide];
+
+      const image =
+        getCachedImage(currentSlide);
+
+      const dots =
+        slides.map((_, index) => `
+          <span
+            class="dot ${
+              index === currentSlide
+                ? "active"
+                : ""
+            }"
+            onclick="goToSlide(${index})">
+          </span>
+        `).join("");
+
+      let imageHTML;
+
+      if (image) {
+
+        imageHTML = `
+          <img
+            src="${image}"
+            alt="AI slide illustration"
+          >
+        `;
+
       } else {
-        contentHTML = `
-          <p>
-            ${escapeHTML(
-              slide.content ||
-              slide.text ||
-              slide.description ||
-              ""
-            )}
-          </p>
+
+        imageHTML = `
+          <div class="image-loading">
+            <div>
+              <div class="spinner"></div>
+              AI сүрөт даярдап жатат...
+            </div>
+          </div>
         `;
       }
 
-      const dots = slides.map((_, index) => `
-        <span
-          class="dot ${index === currentSlide ? "active" : ""}"
-          onclick="goToSlide(${index})">
-        </span>
-      `).join("");
-
       viewer.innerHTML = `
+
         <div class="slide-wrapper">
 
           <div class="slide">
-            <div class="slide-content">
+
+            <div class="text-side">
 
               <div class="slide-number">
                 Слайд ${currentSlide + 1}
               </div>
 
               <h2>
-                ${escapeHTML(slide.title || `Слайд ${currentSlide + 1}`)}
+                ${escapeHTML(
+                  slide.title ||
+                  `Слайд ${currentSlide + 1}`
+                )}
               </h2>
 
-              ${contentHTML}
+              ${createContent(slide)}
 
             </div>
+
+            <div class="image-side">
+              ${imageHTML}
+            </div>
+
           </div>
 
         </div>
@@ -471,7 +685,9 @@
           </button>
 
           <div class="counter">
-            ${currentSlide + 1} / ${slides.length}
+            ${currentSlide + 1}
+            /
+            ${slides.length}
           </div>
 
           <button
@@ -486,101 +702,202 @@
           ${dots}
         </div>
       `;
+
+      if (
+        shouldGenerate &&
+        !image &&
+        slide.imagePrompt
+      ) {
+        generateImage(currentSlide);
+      }
+
+      const nextIndex =
+        currentSlide + 1;
+
+      if (
+        nextIndex < slides.length &&
+        !getCachedImage(nextIndex) &&
+        slides[nextIndex]?.imagePrompt
+      ) {
+        setTimeout(() => {
+          generateImage(nextIndex);
+        }, 1000);
+      }
     }
 
     function nextSlide() {
-      if (currentSlide < slides.length - 1) {
+
+      if (
+        currentSlide <
+        slides.length - 1
+      ) {
+
         currentSlide++;
+
       } else {
+
         currentSlide = 0;
       }
 
-      renderSlide();
+      renderSlide(true);
     }
 
     function prevSlide() {
+
       if (currentSlide > 0) {
+
         currentSlide--;
+
       } else {
-        currentSlide = slides.length - 1;
+
+        currentSlide =
+          slides.length - 1;
       }
 
-      renderSlide();
+      renderSlide(true);
     }
 
     function goToSlide(index) {
+
       currentSlide = index;
-      renderSlide();
+
+      renderSlide(true);
     }
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight") {
-        nextSlide();
-      }
+    document.addEventListener(
+      "keydown",
+      event => {
 
-      if (event.key === "ArrowLeft") {
-        prevSlide();
-      }
-    });
-
-    pdfBtn.addEventListener("click", () => {
-
-      const originalSlide = currentSlide;
-
-      viewer.innerHTML = slides.map((slide, index) => {
-
-        let contentHTML = "";
-
-        if (Array.isArray(slide.points)) {
-          contentHTML = `
-            <ul>
-              ${slide.points.map(point =>
-                `<li>${escapeHTML(point)}</li>`
-              ).join("")}
-            </ul>
-          `;
-        } else {
-          contentHTML = `
-            <p>
-              ${escapeHTML(slide.content || slide.text || "")}
-            </p>
-          `;
+        if (
+          event.key ===
+          "ArrowRight"
+        ) {
+          nextSlide();
         }
 
-        return `
-          <div class="slide-wrapper">
-            <div class="slide">
+        if (
+          event.key ===
+          "ArrowLeft"
+        ) {
+          prevSlide();
+        }
+      }
+    );
 
-              <div class="slide-content">
+    async function prepareAllImages() {
 
-                <div class="slide-number">
-                  Слайд ${index + 1}
+      for (
+        let i = 0;
+        i < slides.length;
+        i++
+      ) {
+
+        if (
+          !getCachedImage(i) &&
+          slides[i]?.imagePrompt
+        ) {
+          await generateImage(i);
+        }
+      }
+    }
+
+    pdfBtn.addEventListener(
+      "click",
+      async () => {
+
+        const oldText =
+          pdfBtn.textContent;
+
+        pdfBtn.disabled = true;
+
+        pdfBtn.textContent =
+          "Сүрөттөр даярдалып жатат...";
+
+        await prepareAllImages();
+
+        pdfBtn.textContent =
+          "PDF даярдалууда...";
+
+        const originalSlide =
+          currentSlide;
+
+        viewer.innerHTML =
+          slides.map(
+            (slide, index) => {
+
+              const image =
+                getCachedImage(index);
+
+              return `
+                <div class="slide-wrapper">
+
+                  <div class="slide">
+
+                    <div class="text-side">
+
+                      <div class="slide-number">
+                        Слайд ${index + 1}
+                      </div>
+
+                      <h2>
+                        ${escapeHTML(
+                          slide.title ||
+                          `Слайд ${index + 1}`
+                        )}
+                      </h2>
+
+                      ${createContent(slide)}
+
+                    </div>
+
+                    <div class="image-side">
+
+                      ${
+                        image
+                          ? `
+                            <img
+                              src="${image}"
+                              alt="AI image"
+                            >
+                          `
+                          : `
+                            <div class="image-loading">
+                              Сүрөт жок
+                            </div>
+                          `
+                      }
+
+                    </div>
+
+                  </div>
+
                 </div>
-
-                <h2>
-                  ${escapeHTML(slide.title || `Слайд ${index + 1}`)}
-                </h2>
-
-                ${contentHTML}
-
-              </div>
-
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      setTimeout(() => {
-
-        window.print();
+              `;
+            }
+          ).join("");
 
         setTimeout(() => {
-          currentSlide = originalSlide;
-          renderSlide();
-        }, 500);
 
-      }, 300);
-    });
+          window.print();
+
+          setTimeout(() => {
+
+            currentSlide =
+              originalSlide;
+
+            renderSlide(false);
+
+            pdfBtn.disabled =
+              false;
+
+            pdfBtn.textContent =
+              oldText;
+
+          }, 700);
+
+        }, 500);
+      }
+    );
 
     loadPresentation();
   </script>
