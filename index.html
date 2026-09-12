@@ -36,7 +36,7 @@ header{
 }
 
 .logo{
-  font-size:27px;
+  font-size:28px;
   font-weight:900;
 }
 
@@ -66,7 +66,12 @@ header{
 }
 
 .hero h1 span{
-  background:linear-gradient(90deg,#7297ff,#a77cff,#64e4f5);
+  background:linear-gradient(
+    90deg,
+    #7297ff,
+    #a77cff,
+    #64e4f5
+  );
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -133,6 +138,13 @@ textarea{
   outline:none;
 }
 
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#718cff;
+  box-shadow:0 0 0 3px rgba(100,130,255,.12);
+}
+
 select option{
   color:black;
 }
@@ -153,10 +165,12 @@ button{
   font-weight:800;
   cursor:pointer;
   background:linear-gradient(90deg,#5e7dff,#8e61ff);
+  box-shadow:0 12px 35px rgba(90,100,255,.25);
 }
 
 button:disabled{
   opacity:.6;
+  cursor:not-allowed;
 }
 
 #status{
@@ -182,10 +196,27 @@ button:disabled{
   width:0;
   height:100%;
   background:linear-gradient(90deg,#5e7dff,#9a68ff);
-  transition:.3s;
+  transition:.35s;
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:22px;
+}
+
+.feature{
+  padding:13px;
+  text-align:center;
+  border-radius:13px;
+  background:rgba(255,255,255,.035);
+  color:#9faec3;
+  font-size:13px;
 }
 
 @media(max-width:700px){
+
   .grid{
     grid-template-columns:1fr;
   }
@@ -197,6 +228,10 @@ button:disabled{
   .card{
     padding:21px;
   }
+
+  .features{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -206,11 +241,20 @@ button:disabled{
 <div class="container">
 
 <header>
-  <div class="logo">Math<span>AI</span></div>
-  <div class="badge">AI Presentation</div>
+
+  <div class="logo">
+    Math<span>AI</span>
+  </div>
+
+  <div class="badge">
+    AI Presentation
+  </div>
+
 </header>
 
+
 <section class="hero">
+
   <h1>
     Математика сабагына
     <span>AI презентация</span>
@@ -218,9 +262,12 @@ button:disabled{
 
   <p>
     Теманы жана классты тандаңыз.
-    AI сабактын текстин жана сүрөттөрүн автоматтык даярдайт.
+    AI сабактын мазмунун түзүп,
+    заманбап презентацияны автоматтык даярдайт.
   </p>
+
 </section>
+
 
 <div class="card">
 
@@ -230,15 +277,22 @@ button:disabled{
   Керектүү маалыматтарды толтуруңуз
 </div>
 
+
 <form id="presentationForm">
 
 <div class="grid">
 
+
 <div class="field">
+
 <label>Класс</label>
 
 <select id="grade" required>
-<option value="">Тандаңыз</option>
+
+<option value="">
+Тандаңыз
+</option>
+
 <option>5-класс</option>
 <option>6-класс</option>
 <option>7-класс</option>
@@ -246,239 +300,207 @@ button:disabled{
 <option>9-класс</option>
 <option>10-класс</option>
 <option>11-класс</option>
+
 </select>
+
 </div>
 
+
 <div class="field">
+
 <label>Слайд саны</label>
 
 <select id="slides">
-<option value="6">6 слайд</option>
-<option value="8">8 слайд</option>
-<option value="10" selected>10 слайд</option>
-<option value="12">12 слайд</option>
-<option value="15">15 слайд</option>
+
+<option value="6">
+6 слайд
+</option>
+
+<option value="8">
+8 слайд
+</option>
+
+<option value="10" selected>
+10 слайд
+</option>
+
+<option value="12">
+12 слайд
+</option>
+
+<option value="15">
+15 слайд
+</option>
+
 </select>
+
 </div>
 
+
 <div class="field">
+
 <label>Тил</label>
 
 <select id="language">
-<option value="Кыргызча">Кыргызча</option>
-<option value="Русский">Русский</option>
+
+<option value="Кыргызча">
+Кыргызча
+</option>
+
+<option value="Русский">
+Русский
+</option>
+
 </select>
+
 </div>
 
+
 <div class="field">
+
 <label>Дизайн</label>
 
 <select id="style">
-<option value="VIP">VIP</option>
-<option value="Заманбап">Заманбап</option>
-<option value="Минималисттик">Минималисттик</option>
-<option value="Мектептик">Мектептик</option>
+
+<option value="VIP">
+VIP
+</option>
+
+<option value="Заманбап">
+Заманбап
+</option>
+
+<option value="Минималисттик">
+Минималисттик
+</option>
+
+<option value="Мектептик">
+Мектептик
+</option>
+
 </select>
+
 </div>
 
+
 <div class="field full">
-<label>Сабактын темасы</label>
+
+<label>
+Сабактын темасы
+</label>
 
 <input
 id="topic"
 placeholder="Мисалы: Квадраттык теңдемелер"
 required>
+
 </div>
 
+
 <div class="field full">
-<label>Кошумча талап</label>
+
+<label>
+Кошумча талап
+</label>
 
 <textarea
 id="extra"
-placeholder="Мисалы: мисалдар жана формулалар кошулсун"></textarea>
-</div>
+placeholder="Мисалы: формулалар, мисалдар жана тапшырмалар кошулсун"></textarea>
 
 </div>
 
-<button id="generateBtn" type="submit">
+</div>
+
+
+<button
+id="generateBtn"
+type="submit">
+
 ✨ AI менен презентация түзүү
+
 </button>
+
 
 <div id="status"></div>
 
+
 <div id="progressWrap">
+
 <div id="progress"></div>
+
+</div>
+
+
+<div class="features">
+
+<div class="feature">
+⚡ Тез даярдалат
+</div>
+
+<div class="feature">
+◆ VIP дизайн
+</div>
+
+<div class="feature">
+PDF сактоо
+</div>
+
 </div>
 
 </form>
+
 </div>
+
 </div>
+
 
 <script>
 
 const form =
-document.getElementById("presentationForm");
+document.getElementById(
+  "presentationForm"
+);
 
 const btn =
-document.getElementById("generateBtn");
+document.getElementById(
+  "generateBtn"
+);
 
 const statusBox =
-document.getElementById("status");
+document.getElementById(
+  "status"
+);
 
 const progressWrap =
-document.getElementById("progressWrap");
+document.getElementById(
+  "progressWrap"
+);
 
 const progress =
-document.getElementById("progress");
+document.getElementById(
+  "progress"
+);
 
-function updateStatus(text,percent){
 
-  statusBox.style.display="block";
-  statusBox.textContent=text;
+function updateStatus(
+  text,
+  percent
+){
 
-  progressWrap.style.display="block";
-  progress.style.width=percent+"%";
+  statusBox.style.display =
+  "block";
+
+  statusBox.textContent =
+  text;
+
+  progressWrap.style.display =
+  "block";
+
+  progress.style.width =
+  percent + "%";
 }
 
-function sleep(ms){
-  return new Promise(resolve=>setTimeout(resolve,ms));
-}
 
-async function createImage(prompt){
-
-  try{
-
-    const response =
-    await fetch("/api/image",{
-
-      method:"POST",
-
-      headers:{
-        "Content-Type":"application/json"
-      },
-
-      body:JSON.stringify({
-        prompt:prompt
-      })
-    });
-
-    const data =
-    await response.json();
-
-    if(response.status===429){
-
-      console.warn("429 limit");
-
-      return {
-        success:false,
-        retry:true
-      };
-    }
-
-    if(
-      response.ok &&
-      data.success &&
-      data.image
-    ){
-
-      return {
-        success:true,
-        image:data.image
-      };
-    }
-
-    console.error(data);
-
-    return {
-      success:false,
-      retry:false
-    };
-
-  }catch(error){
-
-    console.error(error);
-
-    return {
-      success:false,
-      retry:false
-    };
-  }
-}
-
-async function generateOneImage(slide,index,total){
-
-  if(!slide.imagePrompt){
-    return null;
-  }
-
-  let tries=0;
-
-  while(tries<3){
-
-    tries++;
-
-    updateStatus(
-      `AI сүрөт даярдап жатат: ${index+1} / ${total}`,
-      20+Math.round(((index+1)/total)*75)
-    );
-
-    const result =
-    await createImage(slide.imagePrompt);
-
-    if(result.success){
-      return result.image;
-    }
-
-    if(result.retry){
-
-      updateStatus(
-        `Лимит чыкты. ${index+1}-сүрөт кайра аракет кылууда...`,
-        20+Math.round(((index+1)/total)*75)
-      );
-
-      await sleep(8000);
-      continue;
-    }
-
-    return null;
-  }
-
-  return null;
-}
-
-async function generateImages(slides){
-
-  for(let i=0;i<slides.length;i++){
-
-    const image =
-    await generateOneImage(
-      slides[i],
-      i,
-      slides.length
-    );
-
-    if(image){
-
-      try{
-
-        sessionStorage.setItem(
-          `math_ai_image_${i}`,
-          image
-        );
-
-      }catch(error){
-
-        console.warn(
-          "Сүрөт cache'ге баткан жок"
-        );
-      }
-    }
-
-    if(i<slides.length-1){
-      await sleep(4000);
-    }
-  }
-}
 
 form.addEventListener(
 "submit",
@@ -486,56 +508,128 @@ async function(e){
 
   e.preventDefault();
 
-  const formData={
 
-    grade:
-    document.getElementById("grade").value,
+  const grade =
+  document.getElementById(
+    "grade"
+  ).value;
 
-    slides:
-    document.getElementById("slides").value,
 
-    language:
-    document.getElementById("language").value,
+  const slides =
+  document.getElementById(
+    "slides"
+  ).value;
 
-    style:
-    document.getElementById("style").value,
 
-    topic:
-    document.getElementById("topic").value,
+  const language =
+  document.getElementById(
+    "language"
+  ).value;
 
-    extra:
-    document.getElementById("extra").value
+
+  const style =
+  document.getElementById(
+    "style"
+  ).value;
+
+
+  const topic =
+  document.getElementById(
+    "topic"
+  ).value.trim();
+
+
+  const extra =
+  document.getElementById(
+    "extra"
+  ).value.trim();
+
+
+
+  if(!grade){
+
+    alert(
+      "Классты тандаңыз"
+    );
+
+    return;
+  }
+
+
+  if(!topic){
+
+    alert(
+      "Сабактын темасын жазыңыз"
+    );
+
+    return;
+  }
+
+
+
+  const formData = {
+
+    grade:grade,
+
+    slides:slides,
+
+    language:language,
+
+    style:style,
+
+    topic:topic,
+
+    extra:extra
+
   };
 
-  btn.disabled=true;
 
-  btn.textContent=
+
+  btn.disabled = true;
+
+  btn.textContent =
   "AI даярдап жатат...";
 
+
   updateStatus(
-    "Слайддардын тексти даярдалууда...",
-    5
+    "AI сабактын мазмунун түзүп жатат...",
+    25
   );
 
+
   try{
+
 
     const response =
     await fetch(
       "/api/generate",
       {
+
         method:"POST",
 
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":
+          "application/json"
         },
 
         body:
-        JSON.stringify(formData)
+        JSON.stringify(
+          formData
+        )
+
       }
     );
 
+
+    updateStatus(
+      "Слайддар даярдалууда...",
+      65
+    );
+
+
     const result =
     await response.json();
+
 
     if(!response.ok){
 
@@ -543,83 +637,109 @@ async function(e){
         result.error ||
         "AI ката берди"
       );
+
     }
 
-    const slides =
+
+
+    const generatedSlides =
     result?.presentation?.slides;
 
+
     if(
-      !Array.isArray(slides) ||
-      !slides.length
+      !Array.isArray(
+        generatedSlides
+      ) ||
+      !generatedSlides.length
     ){
 
       throw new Error(
-        "Слайддар келген жок"
+        "AI слайддарды кайтарган жок"
       );
+
     }
+
+
+
+    /*
+      ЭСКИ ПРЕЗЕНТАЦИЯНЫ
+      ТАЗАЛАЙБЫЗ
+    */
 
     localStorage.removeItem(
       "math_ai_presentation"
     );
 
-    for(let i=0;i<30;i++){
 
-      try{
 
-        sessionStorage.removeItem(
-          `math_ai_image_${i}`
-        );
-
-      }catch(error){}
-    }
+    /*
+      ЖАҢЫ ПРЕЗЕНТАЦИЯНЫ
+      САКТАЙБЫЗ
+    */
 
     localStorage.setItem(
       "math_ai_presentation",
       JSON.stringify(result)
     );
 
-    updateStatus(
-      "Текст даяр. AI сүрөттөрдү даярдап жатат...",
-      20
-    );
 
-    await generateImages(slides);
 
     updateStatus(
-      "Презентация даяр! Ачылып жатат...",
+      "Презентация даяр ✓",
       100
     );
 
-    btn.textContent=
+
+    btn.textContent =
     "Даяр ✓";
+
+
+
+    /*
+      ЭЧ КАНДАЙ СҮРӨТ API ЖОК.
+
+      ДАРОО ПРЕЗЕНТАЦИЯГА
+      ӨТӨБҮЗ.
+    */
 
     setTimeout(
       function(){
 
-        window.location.href=
+        window.location.href =
         "./presentation.html";
 
       },
-      600
+      400
     );
 
-  }catch(error){
+
+  }
+  catch(error){
+
 
     console.error(error);
 
-    statusBox.style.display=
+
+    statusBox.style.display =
     "block";
 
-    statusBox.textContent=
-    "Ката: "+error.message;
 
-    progressWrap.style.display=
+    statusBox.textContent =
+    "Ката: " +
+    error.message;
+
+
+    progressWrap.style.display =
     "none";
 
-    btn.disabled=false;
 
-    btn.textContent=
+    btn.disabled =
+    false;
+
+
+    btn.textContent =
     "✨ AI менен презентация түзүү";
+
   }
 
 });
