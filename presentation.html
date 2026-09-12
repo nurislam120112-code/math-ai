@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math AI — Презентация</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #050b14;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 11, 20, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-inner {
+      width: min(1200px, 94%);
+      min-height: 72px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .logo span {
+      color: #7c9cff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .link-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .primary {
+      background: linear-gradient(90deg, #5f7cff, #8d62ff);
+      color: white;
+    }
+
+    .page {
+      width: min(1200px, 94%);
+      margin: auto;
+      padding: 35px 0 80px;
+    }
+
+    .page-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .page-head h1 {
+      font-size: clamp(28px, 5vw, 50px);
+      margin-bottom: 10px;
+    }
+
+    .page-head p {
+      color: #91a1b8;
+    }
+
+    .presentation-info {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(124,156,255,0.12);
+      border: 1px solid rgba(124,156,255,0.2);
+      font-size: 13px;
+    }
+
+    .viewer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .slide-wrapper {
+      width: min(1000px, 100%);
+    }
+
+    .slide {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: clamp(28px, 6vw, 80px);
+      box-shadow: 0 30px 100px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+
+      background:
+        radial-gradient(circle at 15% 20%, rgba(77, 124, 255, 0.5), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(142, 74, 255, 0.4), transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(0, 217, 255, 0.25), transparent 40%),
+        linear-gradient(135deg, #07111f, #0c1930);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      top: -130px;
+      right: -120px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .slide::after {
+      content: "Math AI";
+      position: absolute;
+      bottom: 18px;
+      right: 25px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .slide-content {
+      width: 100%;
+      max-width: 850px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide-number {
+      display: inline-block;
+      padding: 8px 13px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.1);
+      font-size: 13px;
+      color: #dce6ff;
+    }
+
+    .slide h2 {
+      font-size: clamp(28px, 5vw, 54px);
+      line-height: 1.08;
+      margin-bottom: 25px;
+    }
+
+    .slide ul {
+      padding-left: 25px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .slide li,
+    .slide p {
+      font-size: clamp(16px, 2vw, 23px);
+      line-height: 1.55;
+      color: #d4deed;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      min-width: 120px;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .counter {
+      min-width: 95px;
+      text-align: center;
+      color: #a8b7cc;
+      font-size: 14px;
+    }
+
+    .dots {
+      margin-top: 8px;
+      display: flex;
+      gap: 7px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #7c9cff;
+      transform: scale(1.25);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: #93a1b5;
+    }
+
+    @media (max-width: 700px) {
+      .topbar-inner {
+        padding: 12px 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .slide {
+        aspect-ratio: auto;
+        min-height: 520px;
+        border-radius: 20px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .topbar,
+      .page-head,
+      .controls,
+      .dots {
+        display: none !important;
+      }
+
+      .page {
+        width: 100%;
+        padding: 0;
+      }
+
+      .viewer {
+        display: block;
+      }
+
+      .slide-wrapper {
+        width: 100%;
+        page-break-after: always;
+      }
+
+      .slide {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="logo">
+        Math<span>AI</span>
+      </div>
+
+      <div class="actions">
+        <a href="index.html" class="link-btn secondary">
+          ← Жаңы презентация
+        </a>
+
+        <button class="primary" id="pdfBtn">
+          PDF жүктөө
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="page">
+
+    <div class="page-head">
+      <h1 id="presentationTitle">Презентация</h1>
+      <p>AI түзгөн даяр математика слайддары</p>
+
+      <div class="presentation-info" id="presentationInfo"></div>
+    </div>
+
+    <div id="viewer" class="viewer"></div>
+
+  </main>
+
+  <script>
+    const viewer = document.getElementById("viewer");
+    const titleBox = document.getElementById("presentationTitle");
+    const infoBox = document.getElementById("presentationInfo");
+    const pdfBtn = document.getElementById("pdfBtn");
+
+    let slides = [];
+    let currentSlide = 0;
+    let presentationData = {};
+
+    function escapeHTML(text) {
+      return String(text || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function loadPresentation() {
+      const saved = localStorage.getItem("math_ai_presentation");
+
+      if (!saved) {
+        viewer.innerHTML = `
+          <div class="empty">
+            <h2>Презентация табылган жок</h2>
+            <p>Башкы бетке кайтып, жаңы презентация түзүңүз.</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const data = JSON.parse(saved);
+        presentationData = data.presentation || data;
+
+        slides = presentationData.slides || [];
+
+        titleBox.textContent =
+          presentationData.topic || "Математика презентациясы";
+
+        infoBox.innerHTML = `
+          ${presentationData.grade ? `<span class="pill">${escapeHTML(presentationData.grade)}</span>` : ""}
+          ${presentationData.language ? `<span class="pill">${escapeHTML(presentationData.language)}</span>` : ""}
+          ${presentationData.style ? `<span class="pill">${escapeHTML(presentationData.style)}</span>` : ""}
+          <span class="pill">${slides.length} слайд</span>
+        `;
+
+        renderSlide();
+
+      } catch (error) {
+        viewer.innerHTML = `
+          <div class="empty">
+            Маалымат ачылган жок.
+          </div>
+        `;
+      }
+    }
+
+    function renderSlide() {
+      if (!slides.length) {
+        viewer.innerHTML = `
+          <div class="empty">
+            Слайддар табылган жок.
+          </div>
+        `;
+        return;
+      }
+
+      const slide = slides[currentSlide];
+
+      let contentHTML = "";
+
+      if (Array.isArray(slide.points)) {
+        contentHTML = `
+          <ul>
+            ${slide.points.map(point =>
+              `<li>${escapeHTML(point)}</li>`
+            ).join("")}
+          </ul>
+        `;
+      } else if (Array.isArray(slide.content)) {
+        contentHTML = `
+          <ul>
+            ${slide.content.map(point =>
+              `<li>${escapeHTML(point)}</li>`
+            ).join("")}
+          </ul>
+        `;
+      } else {
+        contentHTML = `
+          <p>
+            ${escapeHTML(
+              slide.content ||
+              slide.text ||
+              slide.description ||
+              ""
+            )}
+          </p>
+        `;
+      }
+
+      const dots = slides.map((_, index) => `
+        <span
+          class="dot ${index === currentSlide ? "active" : ""}"
+          onclick="goToSlide(${index})">
+        </span>
+      `).join("");
+
+      viewer.innerHTML = `
+        <div class="slide-wrapper">
+
+          <div class="slide">
+            <div class="slide-content">
+
+              <div class="slide-number">
+                Слайд ${currentSlide + 1}
+              </div>
+
+              <h2>
+                ${escapeHTML(slide.title || `Слайд ${currentSlide + 1}`)}
+              </h2>
+
+              ${contentHTML}
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="controls">
+
+          <button
+            class="nav-btn"
+            onclick="prevSlide()">
+            ← Артка
+          </button>
+
+          <div class="counter">
+            ${currentSlide + 1} / ${slides.length}
+          </div>
+
+          <button
+            class="nav-btn"
+            onclick="nextSlide()">
+            Кийинки →
+          </button>
+
+        </div>
+
+        <div class="dots">
+          ${dots}
+        </div>
+      `;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+      } else {
+        currentSlide = 0;
+      }
+
+      renderSlide();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+      } else {
+        currentSlide = slides.length - 1;
+      }
+
+      renderSlide();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      renderSlide();
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") {
+        nextSlide();
+      }
+
+      if (event.key === "ArrowLeft") {
+        prevSlide();
+      }
+    });
+
+    pdfBtn.addEventListener("click", () => {
+
+      const originalSlide = currentSlide;
+
+      viewer.innerHTML = slides.map((slide, index) => {
+
+        let contentHTML = "";
+
+        if (Array.isArray(slide.points)) {
+          contentHTML = `
+            <ul>
+              ${slide.points.map(point =>
+                `<li>${escapeHTML(point)}</li>`
+              ).join("")}
+            </ul>
+          `;
+        } else {
+          contentHTML = `
+            <p>
+              ${escapeHTML(slide.content || slide.text || "")}
+            </p>
+          `;
+        }
+
+        return `
+          <div class="slide-wrapper">
+            <div class="slide">
+
+              <div class="slide-content">
+
+                <div class="slide-number">
+                  Слайд ${index + 1}
+                </div>
+
+                <h2>
+                  ${escapeHTML(slide.title || `Слайд ${index + 1}`)}
+                </h2>
+
+                ${contentHTML}
+
+              </div>
+
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      setTimeout(() => {
+
+        window.print();
+
+        setTimeout(() => {
+          currentSlide = originalSlide;
+          renderSlide();
+        }, 500);
+
+      }, 300);
+    });
+
+    loadPresentation();
+  </script>
+
+</body>
+</html>
