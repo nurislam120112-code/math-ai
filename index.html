@@ -1,667 +1,207 @@
-<!DOCTYPE html>
-<html lang="ky">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Math AI — Математика слайд генератору</title>
+<script>
+const form = document.getElementById("presentationForm");
+const btn = document.getElementById("generateBtn");
+const statusBox = document.getElementById("status");
+const progressWrap = document.getElementById("progressWrap");
+const progress = document.getElementById("progress");
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+function updateStatus(text, percent) {
+  statusBox.style.display = "block";
+  statusBox.textContent = text;
+
+  progressWrap.style.display = "block";
+  progress.style.width = percent + "%";
+}
+
+async function createImage(prompt) {
+  try {
+    const response = await fetch("/api/image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success && data.image) {
+      return data.image;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(70, 110, 255, 0.18), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(120, 70, 255, 0.18), transparent 35%),
-        #07111f;
-      color: white;
-      min-height: 100vh;
-    }
+    console.error("Image API:", data);
+    return null;
 
-    .container {
-      width: min(1180px, 92%);
-      margin: auto;
-    }
+  } catch (error) {
+    console.error("Image error:", error);
+    return null;
+  }
+}
 
-    header {
-      padding: 24px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
+/* 3 СҮРӨТТҮ БИР УЧУРДА ДАЯРДАЙТ */
+async function generateImagesInBatches(slides) {
 
-    .logo {
-      font-size: 26px;
-      font-weight: 800;
-    }
+  const batchSize = 3;
 
-    .logo span {
-      color: #7c9cff;
-    }
+  for (let start = 0; start < slides.length; start += batchSize) {
 
-    .badge {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: #dce5ff;
-      backdrop-filter: blur(14px);
-    }
+    const batch = slides.slice(start, start + batchSize);
 
-    .hero {
-      padding: 55px 0 20px;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: clamp(38px, 7vw, 78px);
-      line-height: 0.98;
-      max-width: 900px;
-      margin: auto;
-      font-weight: 900;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(90deg, #7ca3ff, #a97cff, #67e8f9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      margin: 25px auto 0;
-      max-width: 700px;
-      color: #aebcd2;
-      line-height: 1.7;
-      font-size: 17px;
-    }
-
-    .generator-wrap {
-      padding: 45px 0 80px;
-    }
-
-    .generator {
-      max-width: 900px;
-      margin: auto;
-      background: rgba(14, 27, 48, 0.75);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 28px;
-      padding: 30px;
-      box-shadow: 0 30px 100px rgba(0,0,0,0.35);
-      backdrop-filter: blur(20px);
-    }
-
-    .generator h2 {
-      font-size: 26px;
-      margin-bottom: 8px;
-    }
-
-    .generator .sub {
-      color: #91a1b8;
-      font-size: 14px;
-      margin-bottom: 26px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 14px;
-      color: #d5def0;
-      font-weight: 700;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
-      color: white;
-      border-radius: 15px;
-      padding: 15px 16px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    select option {
-      color: black;
-    }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .generate-btn {
-      margin-top: 24px;
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 17px;
-      background: linear-gradient(90deg, #5f7cff, #8d62ff);
-      color: white;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 14px 35px rgba(92, 107, 255, 0.32);
-    }
-
-    .generate-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .status {
-      display: none;
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 14px;
-      background: rgba(124,156,255,0.10);
-      border: 1px solid rgba(124,156,255,0.18);
-      color: #dce5ff;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .progress-wrap {
-      display: none;
-      margin-top: 14px;
-      width: 100%;
-      height: 8px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #5f7cff, #8d62ff);
-      transition: width 0.25s ease;
-    }
-
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .generator {
-        padding: 22px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-
-    <header>
-      <div class="logo">Math<span>AI</span></div>
-      <div class="badge">AI Presentation Generator</div>
-    </header>
-
-    <section class="hero">
-
-      <h1>
-        Математика сабагына
-        <span>VIP презентацияны</span>
-        автоматтык түз
-      </h1>
-
-      <p>
-        Теманы, классты, тилди жана слайд санын тандаңыз.
-        Math AI тексттерди жана слайддарга ылайыктуу AI сүрөттөрдү даярдайт.
-      </p>
-
-    </section>
-
-    <section class="generator-wrap">
-
-      <div class="generator">
-
-        <h2>Жаңы презентация</h2>
-
-        <p class="sub">
-          Презентация толугу менен даяр болгондо автоматтык ачылат.
-        </p>
-
-        <form id="presentationForm">
-
-          <div class="grid">
-
-            <div class="field">
-
-              <label for="grade">
-                Класс
-              </label>
-
-              <select id="grade" required>
-                <option value="">Классты тандаңыз</option>
-                <option>5-класс</option>
-                <option>6-класс</option>
-                <option>7-класс</option>
-                <option>8-класс</option>
-                <option>9-класс</option>
-                <option>10-класс</option>
-                <option>11-класс</option>
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label for="slides">
-                Слайд саны
-              </label>
-
-              <select id="slides">
-                <option value="6">6 слайд</option>
-                <option value="8">8 слайд</option>
-                <option value="10" selected>10 слайд</option>
-                <option value="12">12 слайд</option>
-                <option value="15">15 слайд</option>
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label for="language">
-                Тил
-              </label>
-
-              <select id="language">
-                <option value="Кыргызча">Кыргызча</option>
-                <option value="Русский">Русский</option>
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label for="style">
-                Стиль
-              </label>
-
-              <select id="style">
-                <option value="VIP">VIP</option>
-                <option value="Заманбап">Заманбап</option>
-                <option value="Минималисттик">Минималисттик</option>
-                <option value="Мектептик">Мектептик</option>
-              </select>
-
-            </div>
-
-            <div class="field full">
-
-              <label for="topic">
-                Сабактын темасы
-              </label>
-
-              <input
-                id="topic"
-                type="text"
-                placeholder="Мисалы: Квадраттык теңдемелер"
-                required
-              >
-
-            </div>
-
-            <div class="field full">
-
-              <label for="extra">
-                Кошумча талап
-              </label>
-
-              <textarea
-                id="extra"
-                placeholder="Мисалы: 3 мисал кош, жеңил тилде түшүндүр..."
-              ></textarea>
-
-            </div>
-
-          </div>
-
-          <button
-            class="generate-btn"
-            id="generateBtn"
-            type="submit"
-          >
-            ✨ AI менен презентация түзүү
-          </button>
-
-          <div
-            class="status"
-            id="status">
-          </div>
-
-          <div
-            class="progress-wrap"
-            id="progressWrap">
-
-            <div
-              class="progress"
-              id="progress">
-            </div>
-
-          </div>
-
-        </form>
-
-      </div>
-
-    </section>
-
-  </div>
-
-  <script>
-
-    const form =
-      document.getElementById("presentationForm");
-
-    const btn =
-      document.getElementById("generateBtn");
-
-    const statusBox =
-      document.getElementById("status");
-
-    const progressWrap =
-      document.getElementById("progressWrap");
-
-    const progress =
-      document.getElementById("progress");
-
-
-    function updateStatus(text, percent) {
-
-      statusBox.style.display = "block";
-
-      statusBox.textContent = text;
-
-      progressWrap.style.display = "block";
-
-      progress.style.width =
-        percent + "%";
-    }
-
-
-    async function createImage(prompt) {
-
-      try {
-
-        const response =
-          await fetch("/api/image", {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              prompt
-            })
-
-          });
-
-        const data =
-          await response.json();
-
-        if (
-          response.ok &&
-          data.success &&
-          data.image
-        ) {
-          return data.image;
-        }
-
-        return null;
-
-      } catch (error) {
-
-        console.error(
-          "Image error:",
-          error
-        );
-
-        return null;
-      }
-    }
-
-
-    form.addEventListener(
-      "submit",
-      async (e) => {
-
-        e.preventDefault();
-
-        const data = {
-
-          grade:
-            document.getElementById("grade").value,
-
-          slides:
-            document.getElementById("slides").value,
-
-          language:
-            document.getElementById("language").value,
-
-          style:
-            document.getElementById("style").value,
-
-          topic:
-            document.getElementById("topic").value,
-
-          extra:
-            document.getElementById("extra").value
-
-        };
-
-
-        btn.disabled = true;
-
-        btn.textContent =
-          "Презентация даярдалууда...";
-
-
-        updateStatus(
-          "AI слайддардын текстин түзүп жатат...",
-          10
-        );
-
-
-        try {
-
-          const response =
-            await fetch("/api/generate", {
-
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify(data)
-
-            });
-
-
-          const result =
-            await response.json();
-
-
-          if (!response.ok) {
-
-            throw new Error(
-              result.error ||
-              "Презентация түзүлгөн жок"
-            );
-          }
-
-
-          localStorage.setItem(
-            "math_ai_presentation",
-            JSON.stringify(result)
-          );
-
-
-          /*
-            Эски сүрөттөрдү тазалайбыз
-          */
-
-          for (
-            let i = 0;
-            i < 30;
-            i++
-          ) {
-
-            sessionStorage.removeItem(
-              `math_ai_image_${i}`
-            );
-          }
-
-
-          const slides =
-            result?.presentation?.slides || [];
-
-
-          if (!slides.length) {
-
-            throw new Error(
-              "Слайддар табылган жок"
-            );
-          }
-
-
-          updateStatus(
-            "Слайддардын сүрөттөрү даярдалууда...",
-            20
-          );
-
-
-          /*
-            СҮРӨТТӨРДҮ БИРИНЕН КИЙИН БИРИ ДАЯРДАЙБЫЗ
-          */
-
-          for (
-            let i = 0;
-            i < slides.length;
-            i++
-          ) {
-
-            const slide =
-              slides[i];
-
-
-            if (slide.imagePrompt) {
-
-              updateStatus(
-                `Сүрөт даярдалууда: ${i + 1} / ${slides.length}`,
-                20 +
-                Math.round(
-                  ((i + 1) /
-                  slides.length) * 75
-                )
-              );
-
-
-              const image =
-                await createImage(
-                  slide.imagePrompt
-                );
-
-
-              if (image) {
-
-                try {
-
-                  sessionStorage.setItem(
-                    `math_ai_image_${i}`,
-                    image
-                  );
-
-                } catch (error) {
-
-                  console.log(
-                    "Сүрөт cache'ге баткан жок"
-                  );
-
-                }
-
-              }
-            }
-          }
-
-
-          updateStatus(
-            "Презентация даяр! Ачылып жатат...",
-            100
-          );
-
-
-          setTimeout(() => {
-
-            window.location.href =
-              "presentation.html";
-
-          }, 500);
-
-
-        } catch (error) {
-
-          console.error(error);
-
-
-          statusBox.style.display =
-            "block";
-
-          statusBox.textContent =
-            "Ката: " +
-            error.message;
-
-
-          progressWrap.style.display =
-            "none";
-
-
-          btn.disabled = false;
-
-          btn.textContent =
-            "✨ AI менен презентация түзүү";
-
-        }
-
-      }
+    updateStatus(
+      `AI сүрөттөрдү даярдап жатат: ${start + 1}–${Math.min(
+        start + batch.length,
+        slides.length
+      )} / ${slides.length}`,
+      20 + Math.round((start / slides.length) * 70)
     );
 
-  </script>
+    const results = await Promise.all(
+      batch.map(async (slide, batchIndex) => {
 
-</body>
-</html>
+        const realIndex = start + batchIndex;
+
+        if (!slide.imagePrompt) {
+          return {
+            index: realIndex,
+            image: null
+          };
+        }
+
+        const image = await createImage(slide.imagePrompt);
+
+        return {
+          index: realIndex,
+          image
+        };
+      })
+    );
+
+    for (const result of results) {
+
+      if (!result.image) continue;
+
+      try {
+        sessionStorage.setItem(
+          `math_ai_image_${result.index}`,
+          result.image
+        );
+      } catch (error) {
+        console.warn(
+          `Сүрөт ${result.index + 1} cache'ге баткан жок`
+        );
+      }
+    }
+
+    const completed = Math.min(
+      start + batch.length,
+      slides.length
+    );
+
+    updateStatus(
+      `Даяр: ${completed} / ${slides.length} сүрөт`,
+      20 + Math.round((completed / slides.length) * 75)
+    );
+  }
+}
+
+form.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  const data = {
+    grade: document.getElementById("grade").value,
+    slides: document.getElementById("slides").value,
+    language: document.getElementById("language").value,
+    style: document.getElementById("style").value,
+    topic: document.getElementById("topic").value,
+    extra: document.getElementById("extra").value
+  };
+
+  btn.disabled = true;
+  btn.textContent = "Презентация даярдалууда...";
+
+  updateStatus(
+    "AI слайддардын текстин түзүп жатат...",
+    5
+  );
+
+  try {
+
+    /* 1. ТЕКСТТИ ДАЯРДАЙБЫЗ */
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Презентация түзүлгөн жок"
+      );
+    }
+
+    const slides =
+      result?.presentation?.slides || [];
+
+    if (!slides.length) {
+      throw new Error("Слайддар табылган жок");
+    }
+
+    localStorage.setItem(
+      "math_ai_presentation",
+      JSON.stringify(result)
+    );
+
+    /* 2. МУРУНКУ СҮРӨТТӨРДҮ ТАЗАЛАЙБЫЗ */
+
+    for (let i = 0; i < 30; i++) {
+      sessionStorage.removeItem(
+        `math_ai_image_${i}`
+      );
+    }
+
+    updateStatus(
+      "Текст даяр. AI сүрөттөрдү түзүп жатат...",
+      20
+    );
+
+    /* 3. 3 СҮРӨТТӨН ПАРАЛЛЕЛДҮҮ */
+
+    await generateImagesInBatches(slides);
+
+    /* 4. ДАЯР */
+
+    updateStatus(
+      "Презентация толугу менен даяр!",
+      100
+    );
+
+    btn.textContent = "Даяр ✓";
+
+    setTimeout(() => {
+      window.location.href = "presentation.html";
+    }, 500);
+
+  } catch (error) {
+
+    console.error(error);
+
+    statusBox.style.display = "block";
+
+    statusBox.textContent =
+      "Ката: " + error.message;
+
+    progressWrap.style.display = "none";
+
+    btn.disabled = false;
+
+    btn.textContent =
+      "✨ AI менен презентация түзүү";
+  }
+});
+</script>
