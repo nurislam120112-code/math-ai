@@ -27,6 +27,7 @@ body{
   justify-content:space-between;
   align-items:center;
   padding:16px 22px;
+  gap:12px;
 }
 
 .logo{
@@ -144,6 +145,7 @@ button{
 }
 
 .triangle{
+  position:absolute;
   width:0;
   height:0;
   border-left:55px solid transparent;
@@ -348,6 +350,19 @@ li{
 
 @media(max-width:800px){
 
+  .topbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .actions{
+    width:100%;
+  }
+
+  .actions button{
+    flex:1;
+  }
+
   .slide{
     aspect-ratio:auto;
     min-height:78vh;
@@ -387,6 +402,8 @@ li{
   }
 }
 
+
+/* PDF */
 @media print{
 
   @page{
@@ -394,7 +411,10 @@ li{
     margin:0;
   }
 
+  html,
   body{
+    width:100%;
+    height:auto;
     background:white;
   }
 
@@ -410,8 +430,8 @@ li{
   }
 
   .print-slide{
-    width:100vw;
-    height:100vh;
+    width:297mm;
+    height:210mm;
     position:relative;
     overflow:hidden;
 
@@ -419,46 +439,114 @@ li{
     break-after:page;
 
     background:
-      radial-gradient(circle at 20% 20%,rgba(70,120,255,.25),transparent 30%),
-      radial-gradient(circle at 80% 80%,rgba(150,80,255,.20),transparent 30%),
-      linear-gradient(135deg,#0a1628,#0e1d33);
+      radial-gradient(circle at 20% 20%,rgba(70,120,255,.28),transparent 30%),
+      radial-gradient(circle at 80% 80%,rgba(150,80,255,.23),transparent 30%),
+      linear-gradient(135deg,#0a1628,#0e1d33) !important;
 
-    color:white;
+    color:white !important;
+
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .print-slide:last-child{
+    page-break-after:auto;
+  }
+
+  .print-grid{
+    position:absolute;
+    inset:0;
+
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+
+    background-size:45px 45px;
+  }
+
+  .print-glow-one{
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    background:#396dff;
+    filter:blur(90px);
+    opacity:.3;
+    top:-100px;
+    left:-70px;
+  }
+
+  .print-glow-two{
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    background:#8d4cff;
+    filter:blur(90px);
+    opacity:.3;
+    right:-100px;
+    bottom:-100px;
   }
 
   .print-content{
+    position:relative;
+    z-index:5;
     width:62%;
     height:100%;
-    padding:7%;
+    padding:20mm;
     display:flex;
     flex-direction:column;
     justify-content:center;
   }
 
+  .print-number{
+    font-size:12px;
+    color:#8da5ff;
+    font-weight:bold;
+    margin-bottom:12px;
+  }
+
   .print-content h1{
-    font-size:38px;
-    margin-bottom:22px;
+    font-size:34px;
+    line-height:1.1;
+    margin-bottom:20px;
+    color:white;
+  }
+
+  .print-content ul{
+    padding-left:22px;
   }
 
   .print-content li{
-    font-size:20px;
-    margin-bottom:12px;
+    font-size:18px;
+    line-height:1.4;
+    margin-bottom:11px;
+    color:#dce5f4;
   }
 
   .print-visual{
     position:absolute;
-    right:6%;
-    top:20%;
-    width:28%;
-    height:60%;
-    border-radius:26px;
+    z-index:5;
+    right:18mm;
+    top:42mm;
+    width:78mm;
+    height:125mm;
+
+    border-radius:22px;
     border:1px solid rgba(255,255,255,.15);
-    background:rgba(255,255,255,.05);
+
+    background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.02)
+      );
+
     display:flex;
     align-items:center;
     justify-content:center;
 
-    font-size:100px;
+    font-size:90px;
     font-weight:900;
     color:#b6c5ff;
   }
@@ -493,7 +581,9 @@ li{
 
 </div>
 
+
 <div id="errorBox"></div>
+
 
 <div class="viewer" id="viewer">
 
@@ -529,6 +619,7 @@ li{
 
     </div>
 
+
     <div class="visual-card">
 
       <div
@@ -542,6 +633,7 @@ li{
   </div>
 
 </div>
+
 
 <div class="controls">
 
@@ -564,14 +656,17 @@ li{
 
 </div>
 
+
 <div id="printArea"></div>
+
 
 <script>
 
-let slides=[];
-let currentIndex=0;
+let slides = [];
+let currentIndex = 0;
 
-const symbols=[
+
+const symbols = [
   "∑",
   "π",
   "√",
@@ -581,38 +676,48 @@ const symbols=[
   "∫",
   "%",
   "÷",
-  "×"
+  "×",
+  "α",
+  "β"
 ];
 
-const title=
+
+const title =
 document.getElementById("title");
 
-const points=
+const points =
 document.getElementById("points");
 
-const slideNumber=
+const slideNumber =
 document.getElementById("slideNumber");
 
-const dots=
+const dots =
 document.getElementById("dots");
 
-const centerSymbol=
+const centerSymbol =
 document.getElementById("centerSymbol");
 
-const viewer=
+const viewer =
 document.getElementById("viewer");
 
-const errorBox=
+const errorBox =
 document.getElementById("errorBox");
+
+const pdfBtn =
+document.getElementById("pdfBtn");
 
 
 function showError(message){
 
-  viewer.style.display="none";
+  viewer.style.display = "none";
 
-  errorBox.style.display="block";
+  document.querySelector(
+    ".controls"
+  ).style.display = "none";
 
-  errorBox.innerHTML=`
+  errorBox.style.display = "block";
+
+  errorBox.innerHTML = `
     <h2>Презентация ачылган жок</h2>
     <br>
     <p>${message}</p>
@@ -630,7 +735,7 @@ function loadPresentation(){
 
   try{
 
-    const raw=
+    const raw =
     localStorage.getItem(
       "math_ai_presentation"
     );
@@ -644,17 +749,22 @@ function loadPresentation(){
       return false;
     }
 
-    const saved=
+
+    const saved =
     JSON.parse(raw);
 
-    const presentation=
+
+    const presentation =
     saved?.presentation
-    ? saved.presentation
-    : saved;
+      ? saved.presentation
+      : saved;
+
 
     if(
       !presentation ||
-      !Array.isArray(presentation.slides) ||
+      !Array.isArray(
+        presentation.slides
+      ) ||
       !presentation.slides.length
     ){
 
@@ -665,12 +775,15 @@ function loadPresentation(){
       return false;
     }
 
-    slides=
+
+    slides =
     presentation.slides;
+
 
     return true;
 
-  }catch(error){
+  }
+  catch(error){
 
     console.error(error);
 
@@ -689,37 +802,47 @@ function renderSlide(){
     return;
   }
 
-  const slide=
+
+  const slide =
   slides[currentIndex];
 
-  slideNumber.textContent=
-  `СЛАЙД ${currentIndex+1} / ${slides.length}`;
 
-  title.textContent=
+  slideNumber.textContent =
+  `СЛАЙД ${currentIndex + 1} / ${slides.length}`;
+
+
+  title.textContent =
   slide.title || "Математика";
 
-  points.innerHTML="";
 
-  const list=
+  points.innerHTML = "";
+
+
+  const list =
   Array.isArray(slide.points)
-  ? slide.points
-  : [];
+    ? slide.points
+    : [];
 
-  list.forEach(point=>{
 
-    const li=
+  list.forEach(point => {
+
+    const li =
     document.createElement("li");
 
-    li.textContent=point;
+    li.textContent =
+    point;
 
     points.appendChild(li);
+
   });
 
-  centerSymbol.textContent=
+
+  centerSymbol.textContent =
   symbols[
     currentIndex %
     symbols.length
   ];
+
 
   renderDots();
 }
@@ -727,27 +850,34 @@ function renderSlide(){
 
 function renderDots(){
 
-  dots.innerHTML="";
+  dots.innerHTML = "";
+
 
   slides.forEach(
-    (_,index)=>{
+    (_,index) => {
 
-      const dot=
+      const dot =
       document.createElement("div");
 
-      dot.className=
-      index===currentIndex
-      ? "dot active"
-      : "dot";
 
-      dot.onclick=()=>{
+      dot.className =
+      index === currentIndex
+        ? "dot active"
+        : "dot";
 
-        currentIndex=index;
+
+      dot.onclick = () => {
+
+        currentIndex =
+        index;
 
         renderSlide();
+
       };
 
+
       dots.appendChild(dot);
+
     }
   );
 }
@@ -755,142 +885,222 @@ function renderDots(){
 
 document.getElementById(
   "prevBtn"
-).onclick=()=>{
+).onclick = () => {
 
-  if(currentIndex>0){
+  if(currentIndex > 0){
 
     currentIndex--;
 
     renderSlide();
+
   }
 };
 
 
 document.getElementById(
   "nextBtn"
-).onclick=()=>{
+).onclick = () => {
 
   if(
-    currentIndex<
-    slides.length-1
+    currentIndex <
+    slides.length - 1
   ){
 
     currentIndex++;
 
     renderSlide();
+
   }
 };
 
 
 document.addEventListener(
   "keydown",
-  e=>{
+  e => {
 
     if(
-      e.key==="ArrowRight" &&
-      currentIndex<slides.length-1
+      e.key === "ArrowRight" &&
+      currentIndex <
+      slides.length - 1
     ){
 
       currentIndex++;
 
       renderSlide();
+
     }
 
+
     if(
-      e.key==="ArrowLeft" &&
-      currentIndex>0
+      e.key === "ArrowLeft" &&
+      currentIndex > 0
     ){
 
       currentIndex--;
 
       renderSlide();
+
     }
+
   }
 );
 
 
 function createPrintSlides(){
 
-  const area=
+  const area =
   document.getElementById(
     "printArea"
   );
 
-  area.innerHTML="";
+
+  area.innerHTML = "";
+
 
   slides.forEach(
-    (slide,index)=>{
+    (slide,index) => {
 
-      const page=
+      const page =
       document.createElement(
         "div"
       );
 
-      page.className=
+
+      page.className =
       "print-slide";
 
 
-      const content=
+      const grid =
       document.createElement(
         "div"
       );
 
-      content.className=
+      grid.className =
+      "print-grid";
+
+
+      const glowOne =
+      document.createElement(
+        "div"
+      );
+
+      glowOne.className =
+      "print-glow-one";
+
+
+      const glowTwo =
+      document.createElement(
+        "div"
+      );
+
+      glowTwo.className =
+      "print-glow-two";
+
+
+      const content =
+      document.createElement(
+        "div"
+      );
+
+      content.className =
       "print-content";
 
 
-      const h1=
+      const number =
+      document.createElement(
+        "div"
+      );
+
+      number.className =
+      "print-number";
+
+      number.textContent =
+      `СЛАЙД ${index + 1} / ${slides.length}`;
+
+
+      const h1 =
       document.createElement(
         "h1"
       );
 
-      h1.textContent=
-      slide.title || "";
+
+      h1.textContent =
+      slide.title ||
+      "Математика";
 
 
-      const ul=
+      const ul =
       document.createElement(
         "ul"
       );
 
 
-      (
-        Array.isArray(slide.points)
+      const slidePoints =
+      Array.isArray(
+        slide.points
+      )
         ? slide.points
-        : []
-      ).forEach(point=>{
-
-        const li=
-        document.createElement(
-          "li"
-        );
-
-        li.textContent=
-        point;
-
-        ul.appendChild(li);
-      });
+        : [];
 
 
-      content.appendChild(h1);
+      slidePoints.forEach(
+        point => {
 
-      content.appendChild(ul);
+          const li =
+          document.createElement(
+            "li"
+          );
+
+          li.textContent =
+          point;
+
+          ul.appendChild(li);
+
+        }
+      );
 
 
-      const visual=
+      content.appendChild(
+        number
+      );
+
+      content.appendChild(
+        h1
+      );
+
+      content.appendChild(
+        ul
+      );
+
+
+      const visual =
       document.createElement(
         "div"
       );
 
-      visual.className=
+
+      visual.className =
       "print-visual";
 
-      visual.textContent=
+
+      visual.textContent =
       symbols[
         index %
         symbols.length
       ];
 
+
+      page.appendChild(
+        grid
+      );
+
+      page.appendChild(
+        glowOne
+      );
+
+      page.appendChild(
+        glowTwo
+      );
 
       page.appendChild(
         content
@@ -900,31 +1110,101 @@ function createPrintSlides(){
         visual
       );
 
+
       area.appendChild(
         page
       );
+
     }
   );
 }
 
 
-document.getElementById(
-  "pdfBtn"
-).onclick=()=>{
+/* PDF БАС КЫЧЫ */
 
-  createPrintSlides();
+pdfBtn.addEventListener(
+  "click",
+  function(){
 
-  setTimeout(()=>{
+    if(!slides.length){
 
-    window.print();
+      alert(
+        "Слайддар жок"
+      );
 
-  },300);
-};
+      return;
+    }
+
+
+    pdfBtn.disabled = true;
+
+    pdfBtn.textContent =
+    "PDF даярдалууда...";
+
+
+    createPrintSlides();
+
+
+    setTimeout(
+      function(){
+
+        try{
+
+          window.focus();
+
+          window.print();
+
+        }
+        catch(error){
+
+          console.error(error);
+
+          alert(
+            "PDF терезеси ачылган жок. Safari менюсунан Share → Print басыңыз."
+          );
+
+        }
+
+
+        setTimeout(
+          function(){
+
+            pdfBtn.disabled =
+            false;
+
+            pdfBtn.textContent =
+            "PDF сактоо";
+
+          },
+          1000
+        );
+
+      },
+      500
+    );
+
+  }
+);
+
+
+window.addEventListener(
+  "afterprint",
+  function(){
+
+    pdfBtn.disabled =
+    false;
+
+    pdfBtn.textContent =
+    "PDF сактоо";
+
+  }
+);
 
 
 if(loadPresentation()){
 
   renderSlide();
+
 }
 
 </script>
