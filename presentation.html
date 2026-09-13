@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Math AI Presentation</title>
+<title>School AI Presentation</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -16,18 +15,17 @@
 
 body{
   font-family:Arial,sans-serif;
-  background:#06101d;
+  background:#050b16;
   color:white;
   min-height:100vh;
-  overflow-x:hidden;
 }
 
 .topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:16px 22px;
   gap:12px;
+  padding:16px 22px;
 }
 
 .logo{
@@ -36,7 +34,9 @@ body{
 }
 
 .logo span{
-  color:#8097ff;
+  background:linear-gradient(90deg,#6f95ff,#a66cff,#55e5ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .actions{
@@ -45,188 +45,146 @@ body{
 }
 
 button{
-  border:none;
+  border:0;
   border-radius:12px;
   padding:11px 16px;
-  cursor:pointer;
   font-weight:700;
+  cursor:pointer;
 }
 
 .back-btn{
-  background:#18243a;
+  background:#162239;
   color:white;
 }
 
 .pdf-btn{
-  background:linear-gradient(90deg,#5f7cff,#8d62ff);
   color:white;
+  background:linear-gradient(90deg,#5f7cff,#8e5fff,#43c9ef);
 }
 
 .viewer{
   display:flex;
   justify-content:center;
-  align-items:center;
   padding:20px;
 }
 
 .slide{
   width:min(1200px,94vw);
   aspect-ratio:16/9;
-  border-radius:28px;
-  overflow:hidden;
+  border-radius:30px;
   position:relative;
-
-  background:
-    radial-gradient(circle at 20% 20%,rgba(70,120,255,.25),transparent 30%),
-    radial-gradient(circle at 80% 80%,rgba(150,80,255,.20),transparent 30%),
-    linear-gradient(135deg,#0a1628,#0e1d33);
-
+  overflow:hidden;
   border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 100px rgba(0,0,0,.55);
+}
 
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.55),
-    inset 0 0 70px rgba(90,110,255,.05);
+.slide.variant-0{
+  background:
+    radial-gradient(circle at 15% 20%,rgba(54,108,255,.34),transparent 30%),
+    radial-gradient(circle at 85% 75%,rgba(146,55,255,.28),transparent 30%),
+    linear-gradient(135deg,#071427,#0d1e36);
+}
+
+.slide.variant-1{
+  background:
+    radial-gradient(circle at 75% 15%,rgba(0,218,255,.30),transparent 28%),
+    radial-gradient(circle at 20% 80%,rgba(40,82,255,.25),transparent 32%),
+    linear-gradient(135deg,#061523,#09283a);
+}
+
+.slide.variant-2{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(178,74,255,.35),transparent 30%),
+    radial-gradient(circle at 100% 80%,rgba(255,84,147,.20),transparent 34%),
+    linear-gradient(135deg,#140b27,#21103c);
+}
+
+.slide.variant-3{
+  background:
+    radial-gradient(circle at 10% 85%,rgba(0,255,184,.22),transparent 28%),
+    radial-gradient(circle at 92% 20%,rgba(57,117,255,.30),transparent 28%),
+    linear-gradient(135deg,#061a1e,#0c2030);
+}
+
+.slide.variant-4{
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,165,45,.25),transparent 26%),
+    radial-gradient(circle at 80% 75%,rgba(255,76,133,.18),transparent 28%),
+    linear-gradient(135deg,#21120c,#281426);
 }
 
 .grid{
   position:absolute;
   inset:0;
-
   background-image:
     linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-
-  background-size:45px 45px;
+  background-size:42px 42px;
 }
 
 .glow{
   position:absolute;
-  width:350px;
-  height:350px;
   border-radius:50%;
-  filter:blur(90px);
+  filter:blur(85px);
   opacity:.35;
 }
 
-.glow.one{
-  background:#396dff;
-  top:-120px;
-  left:-80px;
+.glow.a{
+  width:280px;
+  height:280px;
+  left:-70px;
+  top:-70px;
+  background:#557dff;
 }
 
-.glow.two{
-  background:#8d4cff;
-  right:-120px;
-  bottom:-120px;
+.glow.b{
+  width:330px;
+  height:330px;
+  right:-100px;
+  bottom:-100px;
+  background:#8e4dff;
 }
 
-.shape{
-  position:absolute;
-  border:2px solid rgba(130,160,255,.5);
-  box-shadow:0 0 25px rgba(100,130,255,.35);
-  animation:float 7s ease-in-out infinite;
-}
-
-.circle{
-  width:110px;
-  height:110px;
-  border-radius:50%;
-  right:10%;
-  top:12%;
-}
-
-.square{
-  width:85px;
-  height:85px;
-  right:24%;
-  bottom:13%;
-  transform:rotate(25deg);
-  animation-delay:1s;
-}
-
-.triangle{
-  position:absolute;
-  width:0;
-  height:0;
-  border-left:55px solid transparent;
-  border-right:55px solid transparent;
-  border-bottom:95px solid rgba(120,150,255,.14);
-  right:6%;
-  bottom:9%;
-  filter:drop-shadow(0 0 20px rgba(100,130,255,.35));
-  animation:float 6s ease-in-out infinite;
-}
-
-.line1{
-  position:absolute;
-  width:220px;
-  height:2px;
-  right:8%;
-  top:48%;
-  background:linear-gradient(90deg,transparent,#7997ff,transparent);
-  transform:rotate(-20deg);
-}
-
-.line2{
-  position:absolute;
-  width:180px;
-  height:2px;
-  right:14%;
-  top:60%;
-  background:linear-gradient(90deg,transparent,#9b7cff,transparent);
-  transform:rotate(15deg);
-}
-
-.math-symbol{
-  position:absolute;
-  font-weight:900;
-  color:rgba(180,200,255,.16);
-  text-shadow:0 0 20px rgba(100,130,255,.25);
-  user-select:none;
-}
-
-.s1{
-  font-size:110px;
-  right:18%;
-  top:20%;
-}
-
-.s2{
-  font-size:70px;
-  right:7%;
-  top:55%;
-}
-
-.s3{
-  font-size:90px;
-  right:30%;
-  bottom:8%;
+.glow.c{
+  width:190px;
+  height:190px;
+  right:26%;
+  top:10%;
+  background:#37d5ff;
+  opacity:.18;
 }
 
 .content{
   position:relative;
   z-index:5;
-  width:60%;
+  width:62%;
   height:100%;
-  padding:7%;
   display:flex;
   flex-direction:column;
   justify-content:center;
+  padding:7%;
+}
+
+.subject{
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:#91a8ff;
+  font-weight:800;
+  margin-bottom:12px;
 }
 
 .slide-number{
+  color:#8da0b9;
   font-size:13px;
-  color:#8da5ff;
-  margin-bottom:18px;
-  font-weight:800;
-  letter-spacing:1px;
+  margin-bottom:14px;
 }
 
 h1{
-  font-size:clamp(30px,4vw,58px);
+  font-size:clamp(32px,4vw,58px);
   line-height:1.08;
-  margin-bottom:28px;
-  max-width:700px;
+  margin-bottom:26px;
+  max-width:720px;
 }
 
 ul{
@@ -234,66 +192,118 @@ ul{
 }
 
 li{
-  margin-bottom:16px;
-  font-size:clamp(16px,1.6vw,24px);
+  font-size:clamp(16px,1.65vw,24px);
   line-height:1.45;
-  color:#dce5f4;
+  margin-bottom:14px;
+  color:#dce6f4;
 }
 
-.visual-card{
+.visual{
   position:absolute;
+  z-index:4;
   right:5%;
-  top:18%;
-  width:30%;
-  height:64%;
-  border-radius:28px;
-
+  top:16%;
+  width:31%;
+  height:68%;
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,.13);
   background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.06),
-      rgba(255,255,255,.015)
-    );
-
-  border:1px solid rgba(255,255,255,.11);
-
+    linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.015));
+  backdrop-filter:blur(14px);
   box-shadow:
-    inset 0 0 35px rgba(120,140,255,.05),
-    0 20px 50px rgba(0,0,0,.3);
-
-  backdrop-filter:blur(10px);
-}
-
-.visual-card::before{
-  content:"";
-  position:absolute;
-  inset:18px;
-  border-radius:22px;
-  border:1px solid rgba(130,160,255,.15);
-}
-
-.center-symbol{
-  position:absolute;
-  inset:0;
+    inset 0 0 40px rgba(255,255,255,.025),
+    0 20px 60px rgba(0,0,0,.35);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:100px;
-  font-weight:900;
-  color:rgba(170,190,255,.8);
-  text-shadow:
-    0 0 20px rgba(100,130,255,.7),
-    0 0 50px rgba(120,80,255,.3);
+  overflow:hidden;
 }
 
-@keyframes float{
-  0%,100%{
-    transform:translateY(0) rotate(0deg);
-  }
+.visual::before{
+  content:"";
+  position:absolute;
+  inset:18px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.09);
+}
 
-  50%{
-    transform:translateY(-14px) rotate(8deg);
-  }
+.main-symbol{
+  position:relative;
+  z-index:3;
+  font-size:clamp(80px,10vw,150px);
+  font-weight:900;
+  text-align:center;
+  filter:drop-shadow(0 0 25px rgba(120,160,255,.45));
+}
+
+.ring{
+  position:absolute;
+  border:2px solid rgba(150,180,255,.22);
+  border-radius:50%;
+}
+
+.ring.r1{
+  width:210px;
+  height:210px;
+  animation:spin 12s linear infinite;
+}
+
+.ring.r2{
+  width:145px;
+  height:145px;
+  border-style:dashed;
+  animation:spinReverse 8s linear infinite;
+}
+
+.orb{
+  position:absolute;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#a8bbff;
+  box-shadow:0 0 25px #7594ff;
+}
+
+.orb.o1{
+  top:16%;
+  left:16%;
+}
+
+.orb.o2{
+  right:13%;
+  bottom:17%;
+}
+
+.decor{
+  position:absolute;
+  border:2px solid rgba(130,160,255,.2);
+  box-shadow:0 0 30px rgba(100,130,255,.15);
+}
+
+.decor.square{
+  width:80px;
+  height:80px;
+  right:34%;
+  bottom:8%;
+  transform:rotate(25deg);
+}
+
+.decor.circle{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  top:8%;
+  right:10%;
+}
+
+.decor.line{
+  width:210px;
+  height:2px;
+  border:0;
+  background:linear-gradient(90deg,transparent,#78a0ff,transparent);
+  right:3%;
+  top:52%;
+  transform:rotate(-24deg);
 }
 
 .controls{
@@ -301,37 +311,37 @@ li{
   justify-content:center;
   align-items:center;
   gap:16px;
-  padding:15px 20px 25px;
+  padding:14px 20px 26px;
 }
 
 .nav-btn{
-  width:44px;
-  height:44px;
+  width:46px;
+  height:46px;
   border-radius:50%;
-  background:#18243a;
   color:white;
+  background:#152239;
   font-size:19px;
 }
 
 .dots{
   display:flex;
-  gap:7px;
   flex-wrap:wrap;
   justify-content:center;
-  max-width:500px;
+  gap:7px;
+  max-width:550px;
 }
 
 .dot{
   width:9px;
   height:9px;
   border-radius:50%;
-  background:#3c4b62;
+  background:#36475e;
   cursor:pointer;
 }
 
 .dot.active{
-  background:#7c94ff;
   transform:scale(1.3);
+  background:#7995ff;
 }
 
 #errorBox{
@@ -340,16 +350,23 @@ li{
   margin:80px auto;
   padding:30px;
   border-radius:20px;
-  background:#101b31;
   text-align:center;
+  background:#101b31;
 }
 
 #printArea{
   display:none;
 }
 
-@media(max-width:800px){
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
 
+@keyframes spinReverse{
+  to{transform:rotate(-360deg);}
+}
+
+@media(max-width:800px){
   .topbar{
     flex-direction:column;
     align-items:stretch;
@@ -365,56 +382,39 @@ li{
 
   .slide{
     aspect-ratio:auto;
-    min-height:78vh;
+    min-height:80vh;
   }
 
   .content{
     width:100%;
-    padding:30px;
-    padding-bottom:280px;
+    padding:28px;
+    padding-bottom:270px;
   }
 
-  .visual-card{
-    width:80%;
-    height:230px;
-    right:10%;
+  .visual{
+    width:82%;
+    height:220px;
+    right:9%;
     top:auto;
-    bottom:30px;
+    bottom:25px;
   }
 
-  h1{
-    font-size:32px;
+  .main-symbol{
+    font-size:90px;
   }
 
-  li{
-    font-size:17px;
-  }
-
-  .s1,
-  .s2,
-  .s3,
-  .circle,
-  .square,
-  .triangle,
-  .line1,
-  .line2{
+  .decor{
     display:none;
   }
 }
 
-
-/* PDF */
 @media print{
-
   @page{
     size:A4 landscape;
     margin:0;
   }
 
-  html,
   body{
-    width:100%;
-    height:auto;
     background:white;
   }
 
@@ -434,17 +434,9 @@ li{
     height:210mm;
     position:relative;
     overflow:hidden;
-
     page-break-after:always;
     break-after:page;
-
-    background:
-      radial-gradient(circle at 20% 20%,rgba(70,120,255,.28),transparent 30%),
-      radial-gradient(circle at 80% 80%,rgba(150,80,255,.23),transparent 30%),
-      linear-gradient(135deg,#0a1628,#0e1d33) !important;
-
-    color:white !important;
-
+    color:white;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
@@ -453,44 +445,42 @@ li{
     page-break-after:auto;
   }
 
-  .print-grid{
-    position:absolute;
-    inset:0;
-
-    background-image:
-      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-
-    background-size:45px 45px;
+  .print-slide.v0{
+    background:
+      radial-gradient(circle at 15% 20%,rgba(54,108,255,.34),transparent 30%),
+      radial-gradient(circle at 85% 75%,rgba(146,55,255,.28),transparent 30%),
+      linear-gradient(135deg,#071427,#0d1e36);
   }
 
-  .print-glow-one{
-    position:absolute;
-    width:300px;
-    height:300px;
-    border-radius:50%;
-    background:#396dff;
-    filter:blur(90px);
-    opacity:.3;
-    top:-100px;
-    left:-70px;
+  .print-slide.v1{
+    background:
+      radial-gradient(circle at 75% 15%,rgba(0,218,255,.30),transparent 28%),
+      radial-gradient(circle at 20% 80%,rgba(40,82,255,.25),transparent 32%),
+      linear-gradient(135deg,#061523,#09283a);
   }
 
-  .print-glow-two{
-    position:absolute;
-    width:300px;
-    height:300px;
-    border-radius:50%;
-    background:#8d4cff;
-    filter:blur(90px);
-    opacity:.3;
-    right:-100px;
-    bottom:-100px;
+  .print-slide.v2{
+    background:
+      radial-gradient(circle at 50% 0%,rgba(178,74,255,.35),transparent 30%),
+      radial-gradient(circle at 100% 80%,rgba(255,84,147,.20),transparent 34%),
+      linear-gradient(135deg,#140b27,#21103c);
+  }
+
+  .print-slide.v3{
+    background:
+      radial-gradient(circle at 10% 85%,rgba(0,255,184,.22),transparent 28%),
+      radial-gradient(circle at 92% 20%,rgba(57,117,255,.30),transparent 28%),
+      linear-gradient(135deg,#061a1e,#0c2030);
+  }
+
+  .print-slide.v4{
+    background:
+      radial-gradient(circle at 30% 20%,rgba(255,165,45,.25),transparent 26%),
+      radial-gradient(circle at 80% 75%,rgba(255,76,133,.18),transparent 28%),
+      linear-gradient(135deg,#21120c,#281426);
   }
 
   .print-content{
-    position:relative;
-    z-index:5;
     width:62%;
     height:100%;
     padding:20mm;
@@ -499,59 +489,46 @@ li{
     justify-content:center;
   }
 
-  .print-number{
+  .print-subject{
+    color:#9eb3ff;
     font-size:12px;
-    color:#8da5ff;
     font-weight:bold;
-    margin-bottom:12px;
+    margin-bottom:10px;
+  }
+
+  .print-number{
+    color:#9aa9bc;
+    font-size:12px;
+    margin-bottom:10px;
   }
 
   .print-content h1{
     font-size:34px;
-    line-height:1.1;
     margin-bottom:20px;
-    color:white;
-  }
-
-  .print-content ul{
-    padding-left:22px;
   }
 
   .print-content li{
     font-size:18px;
     line-height:1.4;
-    margin-bottom:11px;
-    color:#dce5f4;
+    margin-bottom:10px;
   }
 
   .print-visual{
     position:absolute;
-    z-index:5;
     right:18mm;
-    top:42mm;
-    width:78mm;
-    height:125mm;
-
-    border-radius:22px;
-    border:1px solid rgba(255,255,255,.15);
-
-    background:
-      linear-gradient(
-        145deg,
-        rgba(255,255,255,.08),
-        rgba(255,255,255,.02)
-      );
-
+    top:40mm;
+    width:80mm;
+    height:130mm;
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.05);
     display:flex;
     align-items:center;
     justify-content:center;
-
     font-size:90px;
     font-weight:900;
-    color:#b6c5ff;
   }
 }
-
 </style>
 </head>
 
@@ -560,7 +537,7 @@ li{
 <div class="topbar">
 
   <div class="logo">
-    Math<span>AI</span>
+    School<span>AI</span>
   </div>
 
   <div class="actions">
@@ -581,32 +558,25 @@ li{
 
 </div>
 
-
 <div id="errorBox"></div>
-
 
 <div class="viewer" id="viewer">
 
-  <div class="slide">
+  <div class="slide variant-0" id="slide">
 
     <div class="grid"></div>
 
-    <div class="glow one"></div>
-    <div class="glow two"></div>
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+    <div class="glow c"></div>
 
-    <div class="shape circle"></div>
-    <div class="shape square"></div>
-
-    <div class="triangle"></div>
-
-    <div class="line1"></div>
-    <div class="line2"></div>
-
-    <div class="math-symbol s1">π</div>
-    <div class="math-symbol s2">√</div>
-    <div class="math-symbol s3">x²</div>
+    <div class="decor square"></div>
+    <div class="decor circle"></div>
+    <div class="decor line"></div>
 
     <div class="content">
+
+      <div class="subject" id="subjectLabel"></div>
 
       <div
         class="slide-number"
@@ -619,13 +589,17 @@ li{
 
     </div>
 
+    <div class="visual">
 
-    <div class="visual-card">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
 
       <div
-        class="center-symbol"
-        id="centerSymbol">
-        ∑
+        class="main-symbol"
+        id="mainSymbol">
       </div>
 
     </div>
@@ -633,7 +607,6 @@ li{
   </div>
 
 </div>
-
 
 <div class="controls">
 
@@ -656,31 +629,70 @@ li{
 
 </div>
 
-
 <div id="printArea"></div>
-
 
 <script>
 
 let slides = [];
 let currentIndex = 0;
+let subject = "Мектеп сабагы";
 
+const subjectSymbols = {
 
-const symbols = [
-  "∑",
-  "π",
-  "√",
-  "∞",
-  "x²",
-  "Δ",
-  "∫",
-  "%",
-  "÷",
-  "×",
-  "α",
-  "β"
-];
+  "Математика":["∑","π","√","∞","x²","Δ"],
+  "Алгебра":["x²","y=","√","±","∞","∑"],
+  "Геометрия":["△","○","□","∠","π","◇"],
 
+  "Физика":["⚡","F","E","λ","Ω","→"],
+
+  "Химия":["⚗","H₂O","CO₂","O₂","Na","🧪"],
+
+  "Биология":["DNA","🧬","🌿","🫀","🧠","🦠"],
+
+  "География":["🌍","🧭","⛰","🌊","☀","🗺"],
+
+  "Тарых":["📜","🏛","⚔","👑","⌛","📚"],
+
+  "Кыргыз тили":["А","Б","СӨЗ","✎","📖","Ү"],
+  "Кыргыз адабияты":["📖","✒","ЫР","📚","✎","★"],
+
+  "Орус тили":["А","Я","СЛОВО","✎","📖","Ъ"],
+  "Орус адабияты":["📖","✒","РОМАН","📚","✎","★"],
+
+  "Англис тили":["ABC","A","B","C","HELLO","✎"],
+
+  "Информатика":["</>","01","💻","AI","{}","⌨"],
+
+  "Астрономия":["☀","★","🌙","🪐","∞","☄"],
+
+  "Адам жана коом":["⚖","👥","🏛","🤝","✓","§"],
+
+  "Жаратылыш таануу":["🌿","🌍","☀","💧","🍃","☁"],
+
+  "Экология":["♻","🌿","🌍","💧","☀","🍃"],
+
+  "Экономика":["₽","$","₸","📈","%","Σ"],
+
+  "Укук":["⚖","§","✓","🏛","📜","🔒"],
+
+  "Музыка":["♪","♫","♬","🎵","𝄞","🎼"],
+
+  "Көркөм өнөр":["✦","◯","△","◇","✎","🎨"],
+
+  "Дене тарбия":["🏃","⚽","🏀","🏐","🏆","⏱"],
+
+  "Технология":["⚙","🔧","💡","📐","⚙","✓"]
+
+};
+
+const slideEl =
+document.getElementById("slide");
+
+const subjectLabel =
+document.getElementById("subjectLabel");
+
+const slideNumber =
+document.getElementById("slideNumber");
 
 const title =
 document.getElementById("title");
@@ -688,14 +700,11 @@ document.getElementById("title");
 const points =
 document.getElementById("points");
 
-const slideNumber =
-document.getElementById("slideNumber");
+const mainSymbol =
+document.getElementById("mainSymbol");
 
 const dots =
 document.getElementById("dots");
-
-const centerSymbol =
-document.getElementById("centerSymbol");
 
 const viewer =
 document.getElementById("viewer");
@@ -707,15 +716,30 @@ const pdfBtn =
 document.getElementById("pdfBtn");
 
 
+function getSymbol(index){
+
+  const list =
+  subjectSymbols[subject] ||
+  ["★","✦","◆","●","▲","✓"];
+
+  return list[
+    index % list.length
+  ];
+}
+
+
 function showError(message){
 
-  viewer.style.display = "none";
+  viewer.style.display =
+  "none";
 
   document.querySelector(
     ".controls"
-  ).style.display = "none";
+  ).style.display =
+  "none";
 
-  errorBox.style.display = "block";
+  errorBox.style.display =
+  "block";
 
   errorBox.innerHTML = `
     <h2>Презентация ачылган жок</h2>
@@ -743,22 +767,19 @@ function loadPresentation(){
     if(!raw){
 
       showError(
-        "Презентация маалыматы табылган жок."
+        "Презентация табылган жок."
       );
 
       return false;
     }
 
-
     const saved =
     JSON.parse(raw);
-
 
     const presentation =
     saved?.presentation
       ? saved.presentation
       : saved;
-
 
     if(
       !presentation ||
@@ -775,10 +796,12 @@ function loadPresentation(){
       return false;
     }
 
-
     slides =
     presentation.slides;
 
+    subject =
+    presentation.subject ||
+    "Мектеп сабагы";
 
     return true;
 
@@ -788,7 +811,7 @@ function loadPresentation(){
     console.error(error);
 
     showError(
-      "Презентацияны окууда ката кетти."
+      "Презентацияны ачууда ката кетти."
     );
 
     return false;
@@ -802,47 +825,46 @@ function renderSlide(){
     return;
   }
 
-
-  const slide =
+  const current =
   slides[currentIndex];
 
+  slideEl.className =
+  "slide variant-" +
+  (currentIndex % 5);
+
+  subjectLabel.textContent =
+  subject;
 
   slideNumber.textContent =
-  `СЛАЙД ${currentIndex + 1} / ${slides.length}`;
-
+  `СЛАЙД ${currentIndex+1} / ${slides.length}`;
 
   title.textContent =
-  slide.title || "Математика";
-
+  current.title ||
+  subject;
 
   points.innerHTML = "";
 
-
   const list =
-  Array.isArray(slide.points)
-    ? slide.points
-    : [];
+  Array.isArray(current.points)
+  ? current.points
+  : [];
 
-
-  list.forEach(point => {
+  list.forEach(text => {
 
     const li =
-    document.createElement("li");
+    document.createElement(
+      "li"
+    );
 
     li.textContent =
-    point;
+    text;
 
     points.appendChild(li);
 
   });
 
-
-  centerSymbol.textContent =
-  symbols[
-    currentIndex %
-    symbols.length
-  ];
-
+  mainSymbol.textContent =
+  getSymbol(currentIndex);
 
   renderDots();
 }
@@ -852,19 +874,18 @@ function renderDots(){
 
   dots.innerHTML = "";
 
-
   slides.forEach(
     (_,index) => {
 
       const dot =
-      document.createElement("div");
-
+      document.createElement(
+        "div"
+      );
 
       dot.className =
       index === currentIndex
-        ? "dot active"
-        : "dot";
-
+      ? "dot active"
+      : "dot";
 
       dot.onclick = () => {
 
@@ -874,7 +895,6 @@ function renderDots(){
         renderSlide();
 
       };
-
 
       dots.appendChild(dot);
 
@@ -916,10 +936,10 @@ document.getElementById(
 
 document.addEventListener(
   "keydown",
-  e => {
+  event => {
 
     if(
-      e.key === "ArrowRight" &&
+      event.key === "ArrowRight" &&
       currentIndex <
       slides.length - 1
     ){
@@ -930,9 +950,8 @@ document.addEventListener(
 
     }
 
-
     if(
-      e.key === "ArrowLeft" &&
+      event.key === "ArrowLeft" &&
       currentIndex > 0
     ){
 
@@ -953,9 +972,7 @@ function createPrintSlides(){
     "printArea"
   );
 
-
   area.innerHTML = "";
-
 
   slides.forEach(
     (slide,index) => {
@@ -965,36 +982,9 @@ function createPrintSlides(){
         "div"
       );
 
-
       page.className =
-      "print-slide";
-
-
-      const grid =
-      document.createElement(
-        "div"
-      );
-
-      grid.className =
-      "print-grid";
-
-
-      const glowOne =
-      document.createElement(
-        "div"
-      );
-
-      glowOne.className =
-      "print-glow-one";
-
-
-      const glowTwo =
-      document.createElement(
-        "div"
-      );
-
-      glowTwo.className =
-      "print-glow-two";
+      "print-slide v" +
+      (index % 5);
 
 
       const content =
@@ -1006,6 +996,18 @@ function createPrintSlides(){
       "print-content";
 
 
+      const subjectDiv =
+      document.createElement(
+        "div"
+      );
+
+      subjectDiv.className =
+      "print-subject";
+
+      subjectDiv.textContent =
+      subject;
+
+
       const number =
       document.createElement(
         "div"
@@ -1015,7 +1017,7 @@ function createPrintSlides(){
       "print-number";
 
       number.textContent =
-      `СЛАЙД ${index + 1} / ${slides.length}`;
+      `СЛАЙД ${index+1} / ${slides.length}`;
 
 
       const h1 =
@@ -1023,10 +1025,8 @@ function createPrintSlides(){
         "h1"
       );
 
-
       h1.textContent =
-      slide.title ||
-      "Математика";
+      slide.title || subject;
 
 
       const ul =
@@ -1034,17 +1034,13 @@ function createPrintSlides(){
         "ul"
       );
 
+      const list =
+      Array.isArray(slide.points)
+      ? slide.points
+      : [];
 
-      const slidePoints =
-      Array.isArray(
-        slide.points
-      )
-        ? slide.points
-        : [];
-
-
-      slidePoints.forEach(
-        point => {
+      list.forEach(
+        text => {
 
           const li =
           document.createElement(
@@ -1052,13 +1048,17 @@ function createPrintSlides(){
           );
 
           li.textContent =
-          point;
+          text;
 
           ul.appendChild(li);
 
         }
       );
 
+
+      content.appendChild(
+        subjectDiv
+      );
 
       content.appendChild(
         number
@@ -1078,29 +1078,12 @@ function createPrintSlides(){
         "div"
       );
 
-
       visual.className =
       "print-visual";
 
-
       visual.textContent =
-      symbols[
-        index %
-        symbols.length
-      ];
+      getSymbol(index);
 
-
-      page.appendChild(
-        grid
-      );
-
-      page.appendChild(
-        glowOne
-      );
-
-      page.appendChild(
-        glowTwo
-      );
 
       page.appendChild(
         content
@@ -1109,7 +1092,6 @@ function createPrintSlides(){
       page.appendChild(
         visual
       );
-
 
       area.appendChild(
         page
@@ -1120,51 +1102,28 @@ function createPrintSlides(){
 }
 
 
-/* PDF БАС КЫЧЫ */
-
 pdfBtn.addEventListener(
   "click",
   function(){
 
     if(!slides.length){
-
-      alert(
-        "Слайддар жок"
-      );
-
       return;
     }
 
+    createPrintSlides();
 
-    pdfBtn.disabled = true;
+    pdfBtn.disabled =
+    true;
 
     pdfBtn.textContent =
     "PDF даярдалууда...";
 
-
-    createPrintSlides();
-
-
     setTimeout(
       function(){
 
-        try{
+        window.focus();
 
-          window.focus();
-
-          window.print();
-
-        }
-        catch(error){
-
-          console.error(error);
-
-          alert(
-            "PDF терезеси ачылган жок. Safari менюсунан Share → Print басыңыз."
-          );
-
-        }
-
+        window.print();
 
         setTimeout(
           function(){
@@ -1180,7 +1139,7 @@ pdfBtn.addEventListener(
         );
 
       },
-      500
+      400
     );
 
   }
