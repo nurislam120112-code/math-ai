@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Math AI</title>
+<title>School AI</title>
 
 <style>
 *{
@@ -18,13 +18,14 @@ body{
   min-height:100vh;
   color:white;
   background:
-    radial-gradient(circle at top left,#172c66 0%,transparent 35%),
-    radial-gradient(circle at bottom right,#391c68 0%,transparent 35%),
-    #07111f;
+    radial-gradient(circle at 15% 15%,rgba(55,105,255,.22),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(145,60,255,.18),transparent 28%),
+    radial-gradient(circle at 50% 90%,rgba(0,210,255,.12),transparent 35%),
+    #06101e;
 }
 
 .container{
-  width:min(1000px,92%);
+  width:min(1050px,92%);
   margin:auto;
 }
 
@@ -36,74 +37,91 @@ header{
 }
 
 .logo{
-  font-size:28px;
+  font-size:29px;
   font-weight:900;
 }
 
 .logo span{
-  color:#809cff;
+  background:linear-gradient(90deg,#7195ff,#aa73ff,#63e5ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .badge{
   padding:9px 14px;
   border-radius:30px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.1);
-  color:#cbd7ea;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.11);
+  color:#cad6e9;
   font-size:13px;
 }
 
 .hero{
   text-align:center;
-  padding:45px 0 35px;
+  padding:40px 0 34px;
 }
 
 .hero h1{
-  max-width:850px;
+  font-size:clamp(38px,7vw,72px);
+  line-height:1.03;
+  max-width:900px;
   margin:auto;
-  font-size:clamp(37px,7vw,70px);
-  line-height:1.05;
 }
 
 .hero h1 span{
-  background:linear-gradient(
-    90deg,
-    #7297ff,
-    #a77cff,
-    #64e4f5
-  );
+  background:linear-gradient(90deg,#6f92ff,#aa72ff,#58dff7);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 .hero p{
-  max-width:650px;
+  max-width:700px;
   margin:22px auto 0;
-  color:#9eacc2;
+  color:#9baac0;
   line-height:1.6;
+  font-size:16px;
 }
 
 .card{
-  max-width:850px;
+  position:relative;
+  overflow:hidden;
+  max-width:900px;
   margin:15px auto 70px;
   padding:30px;
-  border-radius:28px;
-  background:rgba(13,27,49,.86);
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 30px 90px rgba(0,0,0,.35);
+  border-radius:30px;
+  background:rgba(11,25,45,.88);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 30px 90px rgba(0,0,0,.4);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  background:#455dff;
+  filter:blur(110px);
+  opacity:.12;
+  top:-130px;
+  right:-100px;
 }
 
 .card h2{
+  position:relative;
+  font-size:25px;
   margin-bottom:7px;
 }
 
 .sub{
+  position:relative;
   color:#91a1b7;
   font-size:14px;
   margin-bottom:25px;
 }
 
 .grid{
+  position:relative;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:17px;
@@ -121,7 +139,7 @@ header{
 
 label{
   font-size:14px;
-  font-weight:bold;
+  font-weight:700;
   color:#dbe4f3;
 }
 
@@ -131,8 +149,8 @@ textarea{
   width:100%;
   padding:15px;
   border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:#111f36;
+  border:1px solid rgba(255,255,255,.11);
+  background:#101f36;
   color:white;
   font-size:15px;
   outline:none;
@@ -141,8 +159,8 @@ textarea{
 input:focus,
 select:focus,
 textarea:focus{
-  border-color:#718cff;
-  box-shadow:0 0 0 3px rgba(100,130,255,.12);
+  border-color:#7690ff;
+  box-shadow:0 0 0 3px rgba(100,130,255,.11);
 }
 
 select option{
@@ -155,6 +173,7 @@ textarea{
 }
 
 button{
+  position:relative;
   width:100%;
   margin-top:23px;
   padding:17px;
@@ -164,17 +183,17 @@ button{
   font-size:17px;
   font-weight:800;
   cursor:pointer;
-  background:linear-gradient(90deg,#5e7dff,#8e61ff);
-  box-shadow:0 12px 35px rgba(90,100,255,.25);
+  background:linear-gradient(90deg,#5878ff,#905dff,#4ccff0);
+  box-shadow:0 15px 40px rgba(90,100,255,.28);
 }
 
 button:disabled{
   opacity:.6;
-  cursor:not-allowed;
 }
 
 #status{
   display:none;
+  position:relative;
   margin-top:16px;
   padding:14px;
   text-align:center;
@@ -195,11 +214,12 @@ button:disabled{
 #progress{
   width:0;
   height:100%;
-  background:linear-gradient(90deg,#5e7dff,#9a68ff);
+  background:linear-gradient(90deg,#5878ff,#9b63ff,#53daf5);
   transition:.35s;
 }
 
 .features{
+  position:relative;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:12px;
@@ -208,15 +228,15 @@ button:disabled{
 
 .feature{
   padding:13px;
-  text-align:center;
   border-radius:13px;
-  background:rgba(255,255,255,.035);
+  text-align:center;
   color:#9faec3;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.04);
   font-size:13px;
 }
 
 @media(max-width:700px){
-
   .grid{
     grid-template-columns:1fr;
   }
@@ -232,6 +252,10 @@ button:disabled{
   .features{
     grid-template-columns:1fr;
   }
+
+  .badge{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -243,11 +267,11 @@ button:disabled{
 <header>
 
   <div class="logo">
-    Math<span>AI</span>
+    School<span>AI</span>
   </div>
 
   <div class="badge">
-    AI Presentation
+    AI Presentation Maker
   </div>
 
 </header>
@@ -256,14 +280,13 @@ button:disabled{
 <section class="hero">
 
   <h1>
-    Математика сабагына
+    Мектеп сабактарына
     <span>AI презентация</span>
   </h1>
 
   <p>
-    Теманы жана классты тандаңыз.
-    AI сабактын мазмунун түзүп,
-    заманбап презентацияны автоматтык даярдайт.
+    Предметти, классты жана теманы тандаңыз.
+    AI сабактын мазмунун түзүп, кооз презентация даярдайт.
   </p>
 
 </section>
@@ -274,7 +297,7 @@ button:disabled{
 <h2>Жаңы презентация</h2>
 
 <div class="sub">
-  Керектүү маалыматтарды толтуруңуз
+  Сабак тууралуу маалыматтарды толтуруңуз
 </div>
 
 
@@ -285,14 +308,58 @@ button:disabled{
 
 <div class="field">
 
+<label>Предмет</label>
+
+<select id="subject" required>
+
+<option value="">
+Предметти тандаңыз
+</option>
+
+<option value="Математика">Математика</option>
+<option value="Алгебра">Алгебра</option>
+<option value="Геометрия">Геометрия</option>
+<option value="Физика">Физика</option>
+<option value="Химия">Химия</option>
+<option value="Биология">Биология</option>
+<option value="География">География</option>
+<option value="Тарых">Тарых</option>
+<option value="Кыргыз тили">Кыргыз тили</option>
+<option value="Кыргыз адабияты">Кыргыз адабияты</option>
+<option value="Орус тили">Орус тили</option>
+<option value="Орус адабияты">Орус адабияты</option>
+<option value="Англис тили">Англис тили</option>
+<option value="Информатика">Информатика</option>
+<option value="Астрономия">Астрономия</option>
+<option value="Адам жана коом">Адам жана коом</option>
+<option value="Жаратылыш таануу">Жаратылыш таануу</option>
+<option value="Экология">Экология</option>
+<option value="Экономика">Экономика</option>
+<option value="Укук">Укук</option>
+<option value="Музыка">Музыка</option>
+<option value="Көркөм өнөр">Көркөм өнөр</option>
+<option value="Дене тарбия">Дене тарбия</option>
+<option value="Технология">Технология</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
 <label>Класс</label>
 
 <select id="grade" required>
 
 <option value="">
-Тандаңыз
+Классты тандаңыз
 </option>
 
+<option>1-класс</option>
+<option>2-класс</option>
+<option>3-класс</option>
+<option>4-класс</option>
 <option>5-класс</option>
 <option>6-класс</option>
 <option>7-класс</option>
@@ -312,25 +379,11 @@ button:disabled{
 
 <select id="slides">
 
-<option value="6">
-6 слайд
-</option>
-
-<option value="8">
-8 слайд
-</option>
-
-<option value="10" selected>
-10 слайд
-</option>
-
-<option value="12">
-12 слайд
-</option>
-
-<option value="15">
-15 слайд
-</option>
+<option value="6">6 слайд</option>
+<option value="8">8 слайд</option>
+<option value="10" selected>10 слайд</option>
+<option value="12">12 слайд</option>
+<option value="15">15 слайд</option>
 
 </select>
 
@@ -366,6 +419,10 @@ button:disabled{
 VIP
 </option>
 
+<option value="Неон">
+Неон
+</option>
+
 <option value="Заманбап">
 Заманбап
 </option>
@@ -383,15 +440,44 @@ VIP
 </div>
 
 
+<div class="field">
+
+<label>Сабактын түрү</label>
+
+<select id="lessonType">
+
+<option value="Жаңы тема">
+Жаңы тема
+</option>
+
+<option value="Кайталоо">
+Кайталоо
+</option>
+
+<option value="Практикалык сабак">
+Практикалык сабак
+</option>
+
+<option value="Ачык сабак">
+Ачык сабак
+</option>
+
+<option value="Жыйынтык сабак">
+Жыйынтык сабак
+</option>
+
+</select>
+
+</div>
+
+
 <div class="field full">
 
-<label>
-Сабактын темасы
-</label>
+<label>Сабактын темасы</label>
 
 <input
 id="topic"
-placeholder="Мисалы: Квадраттык теңдемелер"
+placeholder="Мисалы: Клетканын түзүлүшү"
 required>
 
 </div>
@@ -399,13 +485,11 @@ required>
 
 <div class="field full">
 
-<label>
-Кошумча талап
-</label>
+<label>Кошумча талап</label>
 
 <textarea
 id="extra"
-placeholder="Мисалы: формулалар, мисалдар жана тапшырмалар кошулсун"></textarea>
+placeholder="Мисалы: кызыктуу фактылар, мисалдар жана суроолор кошулсун"></textarea>
 
 </div>
 
@@ -423,11 +507,8 @@ type="submit">
 
 <div id="status"></div>
 
-
 <div id="progressWrap">
-
-<div id="progress"></div>
-
+  <div id="progress"></div>
 </div>
 
 
@@ -438,7 +519,7 @@ type="submit">
 </div>
 
 <div class="feature">
-◆ VIP дизайн
+✦ Ар түрдүү дизайн
 </div>
 
 <div class="feature">
@@ -457,35 +538,22 @@ PDF сактоо
 <script>
 
 const form =
-document.getElementById(
-  "presentationForm"
-);
+document.getElementById("presentationForm");
 
 const btn =
-document.getElementById(
-  "generateBtn"
-);
+document.getElementById("generateBtn");
 
 const statusBox =
-document.getElementById(
-  "status"
-);
+document.getElementById("status");
 
 const progressWrap =
-document.getElementById(
-  "progressWrap"
-);
+document.getElementById("progressWrap");
 
 const progress =
-document.getElementById(
-  "progress"
-);
+document.getElementById("progress");
 
 
-function updateStatus(
-  text,
-  percent
-){
+function updateStatus(text,percent){
 
   statusBox.style.display =
   "block";
@@ -501,12 +569,17 @@ function updateStatus(
 }
 
 
-
 form.addEventListener(
 "submit",
 async function(e){
 
   e.preventDefault();
+
+
+  const subject =
+  document.getElementById(
+    "subject"
+  ).value;
 
 
   const grade =
@@ -533,6 +606,12 @@ async function(e){
   ).value;
 
 
+  const lessonType =
+  document.getElementById(
+    "lessonType"
+  ).value;
+
+
   const topic =
   document.getElementById(
     "topic"
@@ -544,6 +623,15 @@ async function(e){
     "extra"
   ).value.trim();
 
+
+  if(!subject){
+
+    alert(
+      "Предметти тандаңыз"
+    );
+
+    return;
+  }
 
 
   if(!grade){
@@ -566,8 +654,9 @@ async function(e){
   }
 
 
-
   const formData = {
+
+    subject:subject,
 
     grade:grade,
 
@@ -577,12 +666,13 @@ async function(e){
 
     style:style,
 
+    lessonType:lessonType,
+
     topic:topic,
 
     extra:extra
 
   };
-
 
 
   btn.disabled = true;
@@ -592,8 +682,9 @@ async function(e){
 
 
   updateStatus(
-    "AI сабактын мазмунун түзүп жатат...",
-    25
+    subject +
+    " сабагы даярдалууда...",
+    20
   );
 
 
@@ -622,7 +713,7 @@ async function(e){
 
 
     updateStatus(
-      "Слайддар даярдалууда...",
+      "Слайддардын мазмуну түзүлүүдө...",
       65
     );
 
@@ -641,7 +732,6 @@ async function(e){
     }
 
 
-
     const generatedSlides =
     result?.presentation?.slides;
 
@@ -654,34 +744,46 @@ async function(e){
     ){
 
       throw new Error(
-        "AI слайддарды кайтарган жок"
+        "Слайддар келген жок"
       );
 
     }
 
 
-
     /*
-      ЭСКИ ПРЕЗЕНТАЦИЯНЫ
-      ТАЗАЛАЙБЫЗ
+      ПРЕДМЕТТИ ДА
+      ПРЕЗЕНТАЦИЯГА САКТАЙБЫЗ
     */
+
+    if(result.presentation){
+
+      result.presentation.subject =
+      subject;
+
+      result.presentation.grade =
+      grade;
+
+      result.presentation.style =
+      style;
+
+      result.presentation.lessonType =
+      lessonType;
+
+      result.presentation.language =
+      language;
+
+    }
+
 
     localStorage.removeItem(
       "math_ai_presentation"
     );
 
 
-
-    /*
-      ЖАҢЫ ПРЕЗЕНТАЦИЯНЫ
-      САКТАЙБЫЗ
-    */
-
     localStorage.setItem(
       "math_ai_presentation",
       JSON.stringify(result)
     );
-
 
 
     updateStatus(
@@ -693,14 +795,6 @@ async function(e){
     btn.textContent =
     "Даяр ✓";
 
-
-
-    /*
-      ЭЧ КАНДАЙ СҮРӨТ API ЖОК.
-
-      ДАРОО ПРЕЗЕНТАЦИЯГА
-      ӨТӨБҮЗ.
-    */
 
     setTimeout(
       function(){
