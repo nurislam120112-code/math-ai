@@ -1,199 +1,405 @@
 export default async function handler(req, res) {
+
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "POST гана уруксат берилет"
     });
   }
 
+
   try {
+
     const {
+      subject,
       grade,
       slides,
       language,
       style,
+      lessonType,
       topic,
       extra
     } = req.body || {};
 
-    if (!grade || !slides || !language || !topic) {
+
+    if (!subject) {
       return res.status(400).json({
-        error: "Маалыматтар толук эмес"
+        error: "Предмет тандалган жок"
       });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!grade) {
+      return res.status(400).json({
+        error: "Класс тандалган жок"
+      });
+    }
+
+
+    if (!topic) {
+      return res.status(400).json({
+        error: "Сабактын темасы жазылган жок"
+      });
+    }
+
+
+    const apiKey =
+      process.env.OPENAI_API_KEY;
+
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "OPENAI_API_KEY коюлган эмес"
+        error: "OPENAI_API_KEY табылган жок"
       });
     }
 
-    const slideCount = Math.min(
-      Math.max(parseInt(slides) || 10, 5),
-      20
-    );
+
+    const slideCount =
+      Number(slides) || 10;
+
 
     const prompt = `
-Сен профессионал математика мугалими жана презентация дизайнерисиң.
+Сен профессионал мектеп мугалими жана презентация түзүүчү AI'сың.
 
-Мектеп сабагына заманбап, визуалдуу презентация түз.
+Мага мектеп сабагына даяр презентация түз.
 
-Класс: ${grade}
-Тема: ${topic}
-Тил: ${language}
-Слайд саны: ${slideCount}
-Стиль: ${style || "VIP"}
-Кошумча талап: ${extra || "Жок"}
+ПРЕДМЕТ:
+${subject}
+
+КЛАСС:
+${grade}
+
+ТЕМА:
+${topic}
+
+САБАКТЫН ТҮРҮ:
+${lessonType || "Жаңы тема"}
+
+ТИЛ:
+${language || "Кыргызча"}
+
+ДИЗАЙН:
+${style || "VIP"}
+
+СЛАЙД САНЫ:
+${slideCount}
+
+КОШУМЧА ТАЛАП:
+${extra || "Жок"}
+
 
 МААНИЛҮҮ ТАЛАПТАР:
 
 1. Так ${slideCount} слайд түз.
-2. Материал ${grade} деңгээлине ылайык болсун.
-3. Ар бир слайдда текст өтө көп болбосун.
-4. Формулалар математикалык жактан туура болсун.
-5. Кеминде 2 мисал болсун.
-6. Практикалык тапшырмалар кош.
-7. Акыркы слайд жыйынтык жана үй тапшырмасы болсун.
 
-АР БИР СЛАЙД ҮЧҮН:
-- title
-- 2-5 кыска point
-- imagePrompt
+2. Мазмун ${grade} окуучуларына түшүнүктүү болсун.
 
-imagePrompt англис тилинде болсун.
+3. Текст өтө узун болбосун.
 
-imagePrompt:
-- слайддын темасына түз байланыштуу болсун;
-- мектептик жана билим берүүчү болсун;
-- профессионал презентация үчүн жарактуу болсун;
-- сүрөттө текст же жазуу болбосун;
-- clean modern educational illustration;
-- landscape 16:9 композициясында болсун.
+4. Ар бир слайдда:
+- так аталыш
+- 2ден 5ке чейин негизги пункт болсун.
 
-Мисалы:
-"Modern educational illustration of a right triangle showing geometric relationships, clean blue background, no text, professional classroom presentation, landscape 16:9"
+5. Биринчи слайд:
+- теманын аталышы
+- кыскача киришүү.
 
-ЖООП JSON ГАНА БОЛСУН.
-Markdown жазба.
-\`\`\` белгилерин колдонбо.
+6. Ортоңку слайддар:
+- негизги түшүндүрмөлөр
+- мисалдар
+- кызыктуу фактылар
+- керектүү формулалар же терминдер.
 
-Формат:
+7. Акыркы слайд:
+- жыйынтык
+же
+- окуучулар үчүн суроолор.
+
+8. Предметке жараша мазмун түз:
+
+Математика / Алгебра / Геометрия:
+формула, мисал, эсеп, түшүндүрмө.
+
+Физика:
+физикалык мыйзам, формула, өлчөө бирдиги, мисал.
+
+Химия:
+элементтер, реакциялар, формулалар, түшүнүктөр.
+
+Биология:
+организмдер, клетка, системалар, процесстер.
+
+География:
+өлкөлөр, жаратылыш, карта, климат, жер бедери.
+
+Тарых:
+даталар, окуялар, инсандар, себеп жана натыйжа.
+
+Кыргыз тили / Орус тили / Англис тили:
+эрежелер, мисалдар, сөздөр, сүйлөмдөр.
+
+Адабият:
+чыгарма, автор, каармандар, негизги ой.
+
+Информатика:
+компьютер, алгоритм, программа, технология.
+
+Астрономия:
+планеталар, космос, жылдыздар, астрономиялык түшүнүктөр.
+
+Жаратылыш таануу / Экология:
+жаратылыш, экосистема, айлана-чөйрө.
+
+Экономика:
+акча, рынок, киреше, чыгаша, негизги түшүнүктөр.
+
+Укук / Адам жана коом:
+укук, милдет, коом, мамлекеттик жана социалдык түшүнүктөр.
+
+Музыка:
+музыкалык терминдер, аспаптар, жанрлар.
+
+Көркөм өнөр:
+түстөр, композиция, сүрөт искусствосу.
+
+Дене тарбия:
+спорт, көнүгүү, ден соолук жана коопсуздук.
+
+Технология:
+курал-жабдык эмес, мектептик технология сабагына ылайык
+коопсуз жана билим берүүчү теориялык мазмун түз.
+
+
+ЖООПТУ JSON ГАНА КАЙТАР.
+
+Башка түшүндүрмө жазба.
+
+Формат так ушундай болсун:
 
 {
   "topic": "${topic}",
+  "subject": "${subject}",
   "grade": "${grade}",
-  "language": "${language}",
+  "language": "${language || "Кыргызча"}",
   "style": "${style || "VIP"}",
+  "lessonType": "${lessonType || "Жаңы тема"}",
   "slides": [
     {
       "title": "Слайддын аталышы",
       "points": [
-        "Биринчи пункт",
-        "Экинчи пункт",
-        "Үчүнчү пункт"
-      ],
-      "imagePrompt": "English image generation prompt here"
+        "Биринчи маалымат",
+        "Экинчи маалымат",
+        "Үчүнчү маалымат"
+      ]
     }
   ]
 }
 `;
 
-    const openaiResponse = await fetch(
-      "https://api.openai.com/v1/responses",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "gpt-5.6-luna",
-          input: prompt
-        })
-      }
-    );
 
-    const openaiData = await openaiResponse.json();
+    const response =
+      await fetch(
+        "https://api.openai.com/v1/responses",
+        {
+          method: "POST",
 
-    if (!openaiResponse.ok) {
-      console.error("OpenAI error:", openaiData);
+          headers: {
+            "Authorization":
+              `Bearer ${apiKey}`,
 
-      return res.status(openaiResponse.status).json({
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            model: "gpt-5.6-luna",
+
+            input: prompt,
+
+            reasoning: {
+              effort: "none"
+            }
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      console.error(
+        "OPENAI ERROR:",
+        JSON.stringify(data)
+      );
+
+      return res.status(
+        response.status
+      ).json({
         error:
-          openaiData?.error?.message ||
-          "AI жооп берген жок"
+          data?.error?.message ||
+          "OpenAI жооп берген жок"
       });
     }
+
 
     let text = "";
 
-    if (typeof openaiData.output_text === "string") {
-      text = openaiData.output_text;
-    }
 
-    if (!text && Array.isArray(openaiData.output)) {
-      for (const item of openaiData.output) {
-        if (!Array.isArray(item.content)) continue;
+    if (
+      typeof data.output_text === "string"
+    ) {
 
-        for (const part of item.content) {
-          if (
-            part.type === "output_text" &&
-            typeof part.text === "string"
-          ) {
-            text += part.text;
-          }
+      text =
+        data.output_text;
+
+    } else if (
+      Array.isArray(data.output)
+    ) {
+
+      for (const item of data.output) {
+
+        if (
+          !Array.isArray(item.content)
+        ) {
+          continue;
         }
+
+
+        for (
+          const content
+          of item.content
+        ) {
+
+          if (
+            typeof content.text === "string"
+          ) {
+
+            text += content.text;
+
+          }
+
+        }
+
       }
+
     }
+
 
     if (!text) {
+
+      console.error(
+        "NO OUTPUT:",
+        JSON.stringify(data)
+      );
+
       return res.status(500).json({
-        error: "AI текст кайтарган жок"
+        error:
+          "AI текст кайтарган жок"
       });
     }
 
-    text = text
-      .replace(/```json/gi, "")
-      .replace(/```/g, "")
-      .trim();
+
+    /*
+      Кээде AI JSON'ду
+      ```json
+      ...
+      ```
+      деп кайтарышы мүмкүн.
+
+      Ошол белгилерди тазалайбыз.
+    */
+
+    text =
+      text.trim()
+        .replace(/^```json/i, "")
+        .replace(/^```/i, "")
+        .replace(/```$/i, "")
+        .trim();
+
 
     let presentation;
 
+
     try {
-      presentation = JSON.parse(text);
-    } catch (error) {
-      console.error("JSON parse error:", text);
+
+      presentation =
+        JSON.parse(text);
+
+    } catch (parseError) {
+
+      console.error(
+        "JSON PARSE ERROR:",
+        text
+      );
 
       return res.status(500).json({
-        error: "AI презентацияны туура форматта берген жок"
+        error:
+          "AI презентацияны туура форматта кайтарган жок. Кайра аракет кылыңыз."
       });
     }
+
 
     if (
       !presentation ||
-      !Array.isArray(presentation.slides)
+      !Array.isArray(
+        presentation.slides
+      )
     ) {
+
       return res.status(500).json({
-        error: "Слайддар түзүлгөн жок"
+        error:
+          "AI слайддарды кайтарган жок"
       });
     }
 
-    presentation.topic = topic;
-    presentation.grade = grade;
-    presentation.language = language;
-    presentation.style = style || "VIP";
+
+    /*
+      Предмет жана башка
+      маалыматтарды сервер өзү
+      кайра так жазып коёт.
+    */
+
+    presentation.subject =
+      subject;
+
+    presentation.grade =
+      grade;
+
+    presentation.topic =
+      topic;
+
+    presentation.language =
+      language || "Кыргызча";
+
+    presentation.style =
+      style || "VIP";
+
+    presentation.lessonType =
+      lessonType || "Жаңы тема";
+
 
     return res.status(200).json({
       success: true,
-      presentation
+      presentation: presentation
     });
+
 
   } catch (error) {
-    console.error("Generate error:", error);
+
+    console.error(
+      "SERVER ERROR:",
+      error
+    );
+
 
     return res.status(500).json({
-      error: "Серверде ката кетти"
+      error:
+        error.message ||
+        "Серверде ката кетти"
     });
+
   }
+
 }
